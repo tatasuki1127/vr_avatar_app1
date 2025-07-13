@@ -10,12 +10,8 @@ IPHONEOS_DEPLOYMENT_TARGET = 15.0
 TARGETED_DEVICE_FAMILY = 1
 SUPPORTED_PLATFORMS = iphoneos iphonesimulator
 
-// Unity Framework リンク設定
-OTHER_LDFLAGS = $(inherited) -framework UnityFramework
-FRAMEWORK_SEARCH_PATHS = $(inherited) $(SRCROOT)/Frameworks $(PROJECT_DIR)/Frameworks
-SWIFT_INCLUDE_PATHS = $(inherited) $(SRCROOT)/Frameworks $(PROJECT_DIR)/Frameworks
-LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks
-HEADER_SEARCH_PATHS = $(inherited) $(SRCROOT)/Frameworks/UnityFramework.framework/Headers
+// Unity Framework via CocoaPods (自動設定)
+ENABLE_BITCODE = NO
 
 // デバッグ時は自動署名
 CODE_SIGN_STYLE = Automatic

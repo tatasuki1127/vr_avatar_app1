@@ -36,8 +36,8 @@ target 'Runner' do
   # Flutter Plugin Dependencies
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
   
-  # Unity Framework Integration
-  # UnityFramework is manually added as framework, not via CocoaPods
+  # Unity Framework Integration via CocoaPods
+  pod 'UnityFramework', :path => './Frameworks/UnityFramework.framework'
   
   target 'RunnerTests' do
     inherit! :search_paths
@@ -58,27 +58,6 @@ post_install do |installer|
       config.build_settings['METAL_ENABLE_DEBUG_INFO'] = config.name == 'Debug' ? 'YES' : 'NO'
       config.build_settings['MTL_ENABLE_DEBUG_INFO'] = config.name == 'Debug' ? 'YES' : 'NO'
       
-      # Unity Framework リンク設定 (全ターゲット強制適用)
-      config.build_settings['OTHER_LDFLAGS'] ||= ['$(inherited)']
-      config.build_settings['OTHER_LDFLAGS'] << '-framework UnityFramework'
-      config.build_settings['FRAMEWORK_SEARCH_PATHS'] ||= ['$(inherited)']
-      config.build_settings['FRAMEWORK_SEARCH_PATHS'] << '$(SRCROOT)/Frameworks'
-      config.build_settings['FRAMEWORK_SEARCH_PATHS'] << '$(PROJECT_DIR)/Frameworks'
-      config.build_settings['LD_RUNPATH_SEARCH_PATHS'] ||= ['$(inherited)']
-      config.build_settings['LD_RUNPATH_SEARCH_PATHS'] << '@executable_path/Frameworks'
-      
-      # Swift Module Search Path 強化
-      if target.name.include?('flutter_unity_widget') || target.name.include?('Runner')
-        config.build_settings['SWIFT_INCLUDE_PATHS'] ||= ['$(inherited)']
-        config.build_settings['SWIFT_INCLUDE_PATHS'] << '$(SRCROOT)/Frameworks'
-        config.build_settings['SWIFT_INCLUDE_PATHS'] << '$(PROJECT_DIR)/Frameworks'
-        # Header Search Path 追加
-        config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)']
-        config.build_settings['HEADER_SEARCH_PATHS'] << '$(SRCROOT)/Frameworks/UnityFramework.framework/Headers'
-        # Import Path 追加
-        config.build_settings['SWIFT_INCLUDE_PATHS'] << '$(SRCROOT)/Frameworks/UnityFramework.framework'
-      end
-      
       # ARM64 最適化（Neural Engine対応）
       config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64' if config.name == 'Debug'
       
@@ -88,5 +67,4 @@ post_install do |installer|
       end
     end
   end
-  
 end
