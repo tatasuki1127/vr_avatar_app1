@@ -12,7 +12,7 @@ dependencies:
     sdk: flutter
   
   # Unity統合
-  flutter_unity_widget: ^2022.2.1
+  flutter_unity_widget: ^2022.2.4
   
   # UI/UX
   cupertino_icons: ^1.0.8
