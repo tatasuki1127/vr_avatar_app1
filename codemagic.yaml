@@ -35,14 +35,20 @@ workflows:
           cd ios
           pod install --repo-update
       
-      - name: Unity Framework の配置確認
+      - name: Unity Framework の自動展開
         script: |
-          # UnityFramework.framework の存在確認
-          if [ ! -d "ios/Frameworks/UnityFramework.framework" ]; then
-            echo "Error: UnityFramework.framework not found"
+          # Unity Framework zip展開
+          cd ios
+          if [ -f "UnityFramework.zip" ]; then
+            echo "📦 Extracting UnityFramework.zip..."
+            unzip -o UnityFramework.zip
+            echo "✅ Unity Framework extracted successfully"
+            echo "Size: $(du -sh Frameworks/UnityFramework.framework)"
+          else
+            echo "❌ UnityFramework.zip not found!"
             exit 1
           fi
-          echo "UnityFramework.framework found - Size: $(du -sh ios/Frameworks/UnityFramework.framework)"
+          cd ..
       
       - name: Build iOS app
         script: |
