@@ -12,7 +12,7 @@ SUPPORTED_PLATFORMS = iphoneos
 
 // Unity Framework リンク設定
 OTHER_LDFLAGS = $(inherited) -framework UnityFramework
-FRAMEWORK_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/Frameworks
+FRAMEWORK_SEARCH_PATHS = $(inherited) $(SRCROOT)/Frameworks
 
 // CodeMagic署名用設定（開発時は無効）
 // CODE_SIGN_STYLE = Manual

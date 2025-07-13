@@ -62,7 +62,7 @@ post_install do |installer|
       config.build_settings['OTHER_LDFLAGS'] ||= ['$(inherited)']
       config.build_settings['OTHER_LDFLAGS'] << '-framework UnityFramework'
       config.build_settings['FRAMEWORK_SEARCH_PATHS'] ||= ['$(inherited)']
-      config.build_settings['FRAMEWORK_SEARCH_PATHS'] << '$(PROJECT_DIR)/Frameworks'
+      config.build_settings['FRAMEWORK_SEARCH_PATHS'] << '$(SRCROOT)/Frameworks'
       
       # ARM64 最適化（Neural Engine対応）
       config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64' if config.name == 'Debug'
