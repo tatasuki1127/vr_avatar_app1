@@ -26,8 +26,7 @@ dependencies:
   # ネイティブ統合
   plugin_platform_interface: ^2.1.7
   
-  # Google Fonts (互換性のため4.0.4にダウングレード)
-  google_fonts: ^4.0.4
+  # Google Fonts removed for build compatibility
 
 dev_dependencies:
   flutter_test:
@@ -51,7 +50,7 @@ flutter:
     - assets/images/
     - assets/icons/
     
-  fonts:
-    - family: NotoSansJP
-      fonts:
-        - asset: assets/fonts/NotoSansJP-Regular.ttf
+  # fonts:
+    # - family: NotoSansJP
+    #   fonts:
+    #     - asset: assets/fonts/NotoSansJP-Regular.ttf

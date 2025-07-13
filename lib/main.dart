@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'screens/splash_screen.dart';
 
 void main() {
@@ -17,7 +16,7 @@ class VRAvatarApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         brightness: Brightness.dark,
-        fontFamily: GoogleFonts.notoSansJp().fontFamily,
+        // システムフォント使用でビルド安定性確保
         // GPU最適化アプリらしいダークテーマ
         scaffoldBackgroundColor: const Color(0xFF1A1A2E),
         primaryColor: const Color(0xFFE94560),
