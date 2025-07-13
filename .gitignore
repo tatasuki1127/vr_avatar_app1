@@ -45,7 +45,15 @@ app.*.map.json
 /android/app/release
 
 # Unity Framework (235MB) - zip圧縮で管理
-ios/Frameworks/
+ios/Frameworks/UnityFramework.framework/Data/
+ios/Frameworks/UnityFramework.framework/UnityFramework
+ios/Frameworks/UnityFramework.framework/*.plist
+ios/Frameworks/UnityFramework.framework/*.txt
+ios/Frameworks/UnityFramework.framework/*.xcprivacy
+ios/Frameworks/UnityFramework.framework/*.podspec
+# Headers と Modules は追跡する（必須）
+!ios/Frameworks/UnityFramework.framework/Headers/
+!ios/Frameworks/UnityFramework.framework/Modules/
 # UnityFramework.zip は Git に含める
 !ios/UnityFramework.zip
 unity_framework/
