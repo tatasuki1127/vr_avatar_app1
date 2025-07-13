@@ -17,19 +17,17 @@ class VRAvatarApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         brightness: Brightness.dark,
-        textTheme: GoogleFonts.notoSansJpTextTheme(
-          ThemeData.dark().textTheme,
-        ),
+        fontFamily: GoogleFonts.notoSansJp().fontFamily,
         // GPU最適化アプリらしいダークテーマ
-        scaffoldBackgroundColor: Color(0xFF1A1A2E),
-        primaryColor: Color(0xFFE94560),
-        colorScheme: ColorScheme.dark(
+        scaffoldBackgroundColor: const Color(0xFF1A1A2E),
+        primaryColor: const Color(0xFFE94560),
+        colorScheme: const ColorScheme.dark(
           primary: Color(0xFFE94560),
           secondary: Color(0xFF16213E),
           surface: Color(0xFF0F3460),
         ),
       ),
-      home: SplashScreen(),
+      home: const SplashScreen(),
     );
   }
 }

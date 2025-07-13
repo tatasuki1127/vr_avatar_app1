@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_unity_widget/flutter_unity_widget.dart';
 import 'package:flutter/services.dart';
+import '../unity/unity_native_widget.dart';
+import '../unity/unity_native_controller.dart';
 
 class UnityVRScreen extends StatefulWidget {
   const UnityVRScreen({super.key});
@@ -10,9 +11,9 @@ class UnityVRScreen extends StatefulWidget {
 }
 
 class _UnityVRScreenState extends State<UnityVRScreen> {
-  late UnityWidgetController _unityWidgetController;
+  UnityNativeController? _unityController;
   bool _isUnityLoaded = false;
-  bool _showControls = true;
+  final bool _showControls = true;
   int _currentCharacter = 0;
   bool _isRecording = false;
 
@@ -35,29 +36,29 @@ class _UnityVRScreenState extends State<UnityVRScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          // Unity Widget (全画面カメラプレビュー - 仕様書準拠)
-          UnityWidget(
+          // Unity Native Widget (全画面カメラプレビュー - 仕様書準拠)
+          UnityNativeWidget(
             onUnityCreated: _onUnityCreated,
             onUnityMessage: _onUnityMessage,
-            onUnitySceneLoaded: _onUnitySceneLoaded,
+            onUnityLoaded: _onUnityLoaded,
+            onUnityError: _onUnityError,
             fullscreen: true,
-            borderRadius: BorderRadius.zero,
-            hideStatus: true,
+            autoStart: true,
           ),
           
           // GPU初期化ローディング画面
           if (!_isUnityLoaded)
-            Container(
+            const ColoredBox(
               color: Color(0xFF1A1A2E),
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // GPU最適化ローディングアニメーション
-                    Container(
+                    SizedBox(
                       width: 100,
                       height: 100,
-                      child: CircularProgressIndicator(
+                      child: const CircularProgressIndicator(
                         color: Color(0xFFE94560),
                         strokeWidth: 4,
                       ),
@@ -116,10 +117,10 @@ class _UnityVRScreenState extends State<UnityVRScreen> {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.7),
+          color: Colors.black.withValues(alpha: 0.7),
           borderRadius: BorderRadius.circular(25),
           border: Border.all(
-            color: Color(0xFFE94560).withOpacity(0.5),
+            color: Color(0xFFE94560).withValues(alpha: 0.5),
             width: 1,
           ),
         ),
@@ -166,7 +167,7 @@ class _UnityVRScreenState extends State<UnityVRScreen> {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.2),
+          color: color.withValues(alpha: 0.2),
           borderRadius: BorderRadius.circular(15),
           border: Border.all(
             color: color,
@@ -205,10 +206,10 @@ class _UnityVRScreenState extends State<UnityVRScreen> {
         child: Container(
           padding: EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.6),
+            color: Colors.black.withValues(alpha: 0.6),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: Colors.white.withOpacity(0.3),
+              color: Colors.white.withValues(alpha: 0.3),
               width: 1,
             ),
           ),
@@ -229,10 +230,10 @@ class _UnityVRScreenState extends State<UnityVRScreen> {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.6),
+          color: Colors.black.withValues(alpha: 0.6),
           borderRadius: BorderRadius.circular(15),
           border: Border.all(
-            color: Color(0xFFE94560).withOpacity(0.3),
+            color: Color(0xFFE94560).withValues(alpha: 0.3),
             width: 1,
           ),
         ),
@@ -259,19 +260,24 @@ class _UnityVRScreenState extends State<UnityVRScreen> {
     );
   }
 
-  void _onUnityCreated(UnityWidgetController controller) {
-    _unityWidgetController = controller;
-    print('Unity Widget created - GPU optimization enabled');
+  void _onUnityCreated(UnityNativeController controller) {
+    _unityController = controller;
+    print('Unity Native Controller created - GPU optimization enabled');
   }
 
-  void _onUnitySceneLoaded(SceneLoaded? scene) {
+  void _onUnityLoaded() {
     setState(() {
       _isUnityLoaded = true;
     });
-    print('Unity scene loaded: ${scene?.name}');
+    print('Unity Framework loaded and ready');
     
     // VR機能を開始（仕様書：1人検出・追跡開始）
     _startVRMode();
+  }
+  
+  void _onUnityError(String error) {
+    print('Unity Error: $error');
+    _showErrorDialog(error);
   }
 
   void _onUnityMessage(dynamic message) {
@@ -308,11 +314,7 @@ class _UnityVRScreenState extends State<UnityVRScreen> {
   }
 
   void _startVRMode() {
-    _unityWidgetController.postMessage(
-      'FlutterUnityBridge',
-      'OnMessage',
-      '{"type":"START_VR","value":""}',
-    );
+    _unityController?.startVRMode();
   }
 
   void _takePhoto() {
@@ -322,11 +324,7 @@ class _UnityVRScreenState extends State<UnityVRScreen> {
     
     if (_isRecording) {
       // 4K高画質撮影開始
-      _unityWidgetController.postMessage(
-        'FlutterUnityBridge',
-        'OnMessage',
-        '{"type":"TAKE_PHOTO","value":"4K"}',
-      );
+      _unityController?.takePhoto();
     }
     
     // ハプティックフィードバック
@@ -336,21 +334,13 @@ class _UnityVRScreenState extends State<UnityVRScreen> {
   void _switchCharacter() {
     // 固定3体キャラクター切り替え
     final nextCharacter = (_currentCharacter + 1) % 3;
-    _unityWidgetController.postMessage(
-      'FlutterUnityBridge',
-      'OnMessage',
-      '{"type":"CHANGE_CHARACTER","value":"$nextCharacter"}',
-    );
+    _unityController?.switchCharacter(nextCharacter);
     
     HapticFeedback.lightImpact();
   }
 
   void _switchCamera() {
-    _unityWidgetController.postMessage(
-      'FlutterUnityBridge',
-      'OnMessage',
-      '{"type":"SWITCH_CAMERA","value":""}',
-    );
+    _unityController?.switchCamera();
     
     HapticFeedback.lightImpact();
   }
@@ -376,7 +366,7 @@ class _UnityVRScreenState extends State<UnityVRScreen> {
   }
 
   void _showErrorDialog(String error) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: Color(0xFF1A1A2E),

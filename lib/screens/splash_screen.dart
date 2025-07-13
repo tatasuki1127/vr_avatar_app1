@@ -16,7 +16,7 @@ class SplashScreen extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Color(0xFFE94560).withOpacity(0.2),
+              color: Color(0xFFE94560).withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(30),
               border: Border.all(
                 color: Color(0xFFE94560),
@@ -60,7 +60,7 @@ class SplashScreen extends StatelessWidget {
           Container(
             width: 200,
             child: LinearProgressIndicator(
-              backgroundColor: Colors.white.withOpacity(0.2),
+              backgroundColor: Colors.white.withValues(alpha: 0.2),
               valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFE94560)),
             ),
           ),
