@@ -12,9 +12,10 @@ SUPPORTED_PLATFORMS = iphoneos iphonesimulator
 
 // Unity Framework リンク設定
 OTHER_LDFLAGS = $(inherited) -framework UnityFramework
-FRAMEWORK_SEARCH_PATHS = $(inherited) $(SRCROOT)/Frameworks
-SWIFT_INCLUDE_PATHS = $(inherited) $(SRCROOT)/Frameworks
+FRAMEWORK_SEARCH_PATHS = $(inherited) $(SRCROOT)/Frameworks $(PROJECT_DIR)/Frameworks
+SWIFT_INCLUDE_PATHS = $(inherited) $(SRCROOT)/Frameworks $(PROJECT_DIR)/Frameworks
 LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks
+HEADER_SEARCH_PATHS = $(inherited) $(SRCROOT)/Frameworks/UnityFramework.framework/Headers
 
 // デバッグ時は自動署名
 CODE_SIGN_STYLE = Automatic

@@ -72,8 +72,11 @@ post_install do |installer|
         config.build_settings['SWIFT_INCLUDE_PATHS'] ||= ['$(inherited)']
         config.build_settings['SWIFT_INCLUDE_PATHS'] << '$(SRCROOT)/Frameworks'
         config.build_settings['SWIFT_INCLUDE_PATHS'] << '$(PROJECT_DIR)/Frameworks'
-        # 明示的にUnityFrameworkモジュールパスを追加
-        config.build_settings['FRAMEWORK_SEARCH_PATHS'] << '$(SRCROOT)/Frameworks/UnityFramework.framework'
+        # Header Search Path 追加
+        config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)']
+        config.build_settings['HEADER_SEARCH_PATHS'] << '$(SRCROOT)/Frameworks/UnityFramework.framework/Headers'
+        # Import Path 追加
+        config.build_settings['SWIFT_INCLUDE_PATHS'] << '$(SRCROOT)/Frameworks/UnityFramework.framework'
       end
       
       # ARM64 最適化（Neural Engine対応）
