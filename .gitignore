@@ -1,0 +1,76 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# Unity Framework (235MB) - CodeMagicで管理
+ios/Frameworks/
+unity_framework/
+
+# iOS署名関連（CodeMagicで管理）
+ios/Runner.xcworkspace/xcuserdata/
+ios/Runner.xcodeproj/xcuserdata/
+ios/Runner.xcodeproj/project.xcworkspace/xcuserdata/
+*.mobileprovision
+*.p12
+*.cer
+*.key
+
+# Unity Export関連
+UnityAsLibrary-iOS/
+unity_build/
+
+# GPU最適化・デバッグファイル
+*.metal.air
+*.metallib
+gpu_debug/
+
+# Neural Engine関連
+*.mlmodel
+*.mlmodelc
+
+# VR Avatar アプリ固有
+vr_avatar_cache/
+character_models_cache/
+pose_estimation_cache/

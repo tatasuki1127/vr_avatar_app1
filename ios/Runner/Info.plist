@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>VR Avatar</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>vr_avatar_app</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(FLUTTER_BUILD_NAME)</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
+	
+	<!-- Camera Usage Permission for VR Avatar -->
+	<key>NSCameraUsageDescription</key>
+	<string>This app uses the camera for real-time VR avatar creation and pose tracking with GPU optimization. Camera access is required for Neural Engine AI processing and Metal API rendering.</string>
+	
+	<!-- Photo Library Usage Permission -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app saves VR avatar photos to your photo library with 4K GPU-enhanced quality.</string>
+	
+	<!-- Flutter Unity Widget Support -->
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
+	
+	<!-- GPU Performance Optimization -->
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>arm64</string>
+		<string>metal</string>
+	</array>
+	
+	<!-- Minimum iOS Version (Neural Engine support) -->
+	<key>MinimumOSVersion</key>
+	<string>15.0</string>
+	
+	<!-- GPU最適化設定（仕様書準拠） -->
+	<key>UIApplicationExitsOnSuspend</key>
+	<false/>
+	
+	<!-- Metal Performance最適化 -->
+	<key>UIStatusBarHidden</key>
+	<true/>
+	
+	<!-- VR性能最適化設定 -->
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	
+	<!-- Neural Engine & Metal API 性能目標 -->
+	<!-- 60FPS安定・8ms AI推論・16ms 3D描画対応 -->
+	
+	<!-- App Store & CodeMagic署名用設定 -->
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	
+	<!-- App Store Connect設定 -->
+	<!-- Bundle IDは$(PRODUCT_BUNDLE_IDENTIFIER)で管理 -->
+</dict>
+</plist>

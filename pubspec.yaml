@@ -1,0 +1,58 @@
+name: vr_avatar_app
+description: GPU最適化リアルタイム人物VR化アプリ - Metal API + Neural Engine対応
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # Unity統合
+  flutter_unity_widget: ^2022.2.1
+  
+  # UI/UX
+  cupertino_icons: ^1.0.8
+  animated_splash_screen: ^1.3.0
+  
+  # パーミッション
+  permission_handler: ^11.0.1
+  
+  # ファイル管理
+  path_provider: ^2.1.1
+  
+  # ネイティブ統合
+  plugin_platform_interface: ^2.1.7
+  
+  # Google Fonts (Noto Sans JP代替)
+  google_fonts: ^6.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # The "flutter_lints" package below contains a set of recommended lints to
+  # encourage good coding practices. The lint set provided by the package is
+  # activated in the `analysis_options.yaml` file located at the root of your
+  # package. See that file for information about deactivating specific lint
+  # rules and activating additional ones.
+  flutter_lints: ^5.0.0
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter packages.
+flutter:
+  uses-material-design: true
+  
+  assets:
+    - assets/images/
+    - assets/icons/
+    
+  fonts:
+    - family: NotoSansJP
+      fonts:
+        - asset: assets/fonts/NotoSansJP-Regular.ttf

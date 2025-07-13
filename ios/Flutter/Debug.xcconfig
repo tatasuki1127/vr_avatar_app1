@@ -1,0 +1,18 @@
+#include "Generated.xcconfig"
+
+// GPU最適化・Metal API設定（デバッグ）
+ENABLE_BITCODE = NO
+METAL_ENABLE_DEBUG_INFO = YES
+MTL_ENABLE_DEBUG_INFO = YES
+
+// iOS最適化設定
+IPHONEOS_DEPLOYMENT_TARGET = 15.0
+TARGETED_DEVICE_FAMILY = 1
+SUPPORTED_PLATFORMS = iphoneos iphonesimulator
+
+// Unity Framework リンク設定
+OTHER_LDFLAGS = $(inherited) -framework UnityFramework
+FRAMEWORK_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/Frameworks
+
+// デバッグ時は自動署名
+CODE_SIGN_STYLE = Automatic
