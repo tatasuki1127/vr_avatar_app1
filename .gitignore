@@ -58,6 +58,10 @@ ios/Frameworks/UnityFramework.framework/*.podspec
 !ios/UnityFramework.zip
 unity_framework/
 
+# Unity静的ライブラリ（大容量ファイル） - zip圧縮で管理
+ios/Libraries/*.a
+ios/Libraries/
+
 # iOS署名関連（CodeMagicで管理）
 ios/Runner.xcworkspace/xcuserdata/
 ios/Runner.xcodeproj/xcuserdata/
