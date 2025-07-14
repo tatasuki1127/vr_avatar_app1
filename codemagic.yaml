@@ -35,6 +35,42 @@ workflows:
           cd ios
           pod install --repo-update
       
+      - name: Unity Framework Headers Validation
+        script: |
+          # Unity Framework headers確認・復元スクリプト
+          cd ios
+          
+          # Headers ディレクトリの確認
+          HEADERS_DIR="Frameworks/UnityFramework.framework/Headers"
+          
+          if [ ! -d "$HEADERS_DIR" ]; then
+            echo "🔧 Creating Headers directory..."
+            mkdir -p "$HEADERS_DIR"
+          fi
+          
+          # 必須ヘッダーファイルの存在確認
+          REQUIRED_HEADERS=("UnityFramework.h" "UnityAppController.h" "RenderPluginDelegate.h" "LifeCycleListener.h")
+          
+          for header in "${REQUIRED_HEADERS[@]}"; do
+            if [ ! -f "$HEADERS_DIR/$header" ]; then
+              echo "⚠️  Missing header: $header"
+              echo "🔧 Restoring from Git repository..."
+              
+              # Git から復元を試行
+              if git show HEAD:"ios/Frameworks/UnityFramework.framework/Headers/$header" > "$HEADERS_DIR/$header" 2>/dev/null; then
+                echo "✅ Restored $header from Git"
+              else
+                echo "❌ Failed to restore $header from Git"
+                exit 1
+              fi
+            else
+              echo "✅ $header exists"
+            fi
+          done
+          
+          echo "🎯 All Unity Framework headers validated successfully!"
+          cd ..
+      
       - name: Unity Framework の自動展開
         script: |
           # Unity Framework zip展開
@@ -45,8 +81,7 @@ workflows:
             echo "✅ Unity Framework extracted successfully"
             echo "Size: $(du -sh Frameworks/UnityFramework.framework)"
           else
-            echo "❌ UnityFramework.zip not found!"
-            exit 1
+            echo "ℹ️  UnityFramework.zip not found - using Git tracked headers"
           fi
           cd ..
       
