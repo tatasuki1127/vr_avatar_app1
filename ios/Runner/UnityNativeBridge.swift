@@ -186,8 +186,9 @@ import UIKit
         }
         
         let getInstance = NSSelectorFromString("getInstance")
-        guard principalClass.responds(to: getInstance),
-              let unityFrameworkResult = principalClass.perform(getInstance),
+        guard let objectClass = principalClass as? NSObject.Type,
+              objectClass.responds(to: getInstance),
+              let unityFrameworkResult = objectClass.perform(getInstance),
               let ufw = unityFrameworkResult.takeUnretainedValue() as? NSObject else {
             throw NSError(domain: "UnityFramework", code: 3, userInfo: [NSLocalizedDescriptionKey: "Failed to get UnityFramework instance"])
         }
