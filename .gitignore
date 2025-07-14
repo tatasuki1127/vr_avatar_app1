@@ -61,6 +61,7 @@ unity_framework/
 # Unity静的ライブラリ（大容量ファイル） - zip圧縮で管理
 ios/Libraries/*.a
 ios/Libraries/
+Libraries_backup/
 
 # iOS署名関連（CodeMagicで管理）
 ios/Runner.xcworkspace/xcuserdata/
