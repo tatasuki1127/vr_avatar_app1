@@ -5,7 +5,7 @@ import UIKit
 /// Flutter と Unity Framework を直接接続
 @objc public class UnityNativeBridge: NSObject, FlutterPlugin {
     
-    private var unityFramework: UnityFramework?
+    private var unityFramework: NSObject?
     private var unityView: UIView?
     private var channel: FlutterMethodChannel?
     private var eventChannel: FlutterEventChannel?
@@ -64,8 +64,8 @@ import UIKit
             unityFramework = try loadUnityFramework()
             
             // Unity 初期化設定
-            unityFramework?.setDataBundleId("com.unity3d.framework")
-            unityFramework?.register(self)
+            _ = unityFramework?.perform(NSSelectorFromString("setDataBundleId:"), with: "com.unity3d.framework")
+            _ = unityFramework?.perform(NSSelectorFromString("registerFrameworkListener:"), with: self)
             
             // GPU最適化設定
             if let args = arguments {
@@ -91,7 +91,12 @@ import UIKit
         }
         
         // Unity 開始
-        unity.runEmbedded(withArgc: CommandLine.argc, argv: CommandLine.unsafeArgv, appLaunchOpts: nil)
+        let selector = NSSelectorFromString("runEmbeddedWithArgc:argv:appLaunchOpts:")
+        if unity.responds(to: selector) {
+            let argc = NSNumber(value: CommandLine.argc)
+            let argv = NSValue(pointer: CommandLine.unsafeArgv)
+            _ = unity.perform(selector, with: argc, with: argv, with: nil)
+        }
         
         print("✅ Unity scene started")
         sendEvent(type: "unity_loaded", data: "scene_started")
@@ -107,23 +112,41 @@ import UIKit
             return
         }
         
-        unityFramework?.sendMessageToGO(withName: gameObject, functionName: method, message: message)
+        let selector = NSSelectorFromString("sendMessageToGOWithName:functionName:message:")
+        if let framework = unityFramework, framework.responds(to: selector) {
+            _ = framework.perform(selector, with: gameObject, with: method, with: message)
+        }
         result(true)
     }
     
     private func pauseUnity(result: @escaping FlutterResult) {
-        unityFramework?.pause(true)
+        let selector = NSSelectorFromString("pause:")
+        if let framework = unityFramework, framework.responds(to: selector) {
+            _ = framework.perform(selector, with: true)
+        }
         result(true)
     }
     
     private func resumeUnity(result: @escaping FlutterResult) {
-        unityFramework?.pause(false)
+        let selector = NSSelectorFromString("pause:")
+        if let framework = unityFramework, framework.responds(to: selector) {
+            _ = framework.perform(selector, with: false)
+        }
         result(true)
     }
     
     private func destroyUnity(result: @escaping FlutterResult) {
-        unityFramework?.unregisterFrameworkListener(self)
-        unityFramework?.unload()
+        if let framework = unityFramework {
+            let unregisterSelector = NSSelectorFromString("unregisterFrameworkListener:")
+            if framework.responds(to: unregisterSelector) {
+                _ = framework.perform(unregisterSelector, with: self)
+            }
+            
+            let unloadSelector = NSSelectorFromString("unloadApplication")
+            if framework.responds(to: unloadSelector) {
+                _ = framework.perform(unloadSelector)
+            }
+        }
         unityFramework = nil
         unityView = nil
         result(true)
@@ -131,7 +154,7 @@ import UIKit
     
     // MARK: - Unity Framework Loading
     
-    private func loadUnityFramework() throws -> UnityFramework {
+    private func loadUnityFramework() throws -> NSObject {
         let bundlePath = Bundle.main.bundlePath + "/Frameworks/UnityFramework.framework"
         let bundle = Bundle(path: bundlePath)
         
@@ -143,7 +166,10 @@ import UIKit
             throw NSError(domain: "UnityFramework", code: 2, userInfo: [NSLocalizedDescriptionKey: "Failed to load UnityFramework bundle"])
         }
         
-        guard let ufw = bundle.principalClass?.getInstance() as? UnityFramework else {
+        guard let principalClass = bundle.principalClass,
+              let selector = NSSelectorFromString("getInstance"),
+              principalClass.responds(to: selector),
+              let ufw = principalClass.perform(selector).takeUnretainedValue() as? NSObject else {
             throw NSError(domain: "UnityFramework", code: 3, userInfo: [NSLocalizedDescriptionKey: "Failed to get UnityFramework instance"])
         }
         
@@ -168,13 +194,22 @@ import UIKit
     // MARK: - Unity View Access
     
     public func getUnityView() -> UIView? {
-        return unityFramework?.appController()?.rootViewController.view
+        guard let framework = unityFramework,
+              let appControllerSelector = NSSelectorFromString("appController"),
+              framework.responds(to: appControllerSelector),
+              let appController = framework.perform(appControllerSelector).takeUnretainedValue(),
+              let rootViewControllerSelector = NSSelectorFromString("rootViewController"),
+              appController.responds(to: rootViewControllerSelector),
+              let rootViewController = appController.perform(rootViewControllerSelector).takeUnretainedValue() as? UIViewController else {
+            return nil
+        }
+        return rootViewController.view
     }
 }
 
 // MARK: - UnityFrameworkListener
 
-extension UnityNativeBridge: UnityFrameworkListener {
+extension UnityNativeBridge {
     
     public func unityDidUnload(_ notification: Notification!) {
         print("🛑 Unity did unload")
