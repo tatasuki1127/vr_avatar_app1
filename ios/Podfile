@@ -36,8 +36,8 @@ target 'Runner' do
   # Flutter Plugin Dependencies
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
   
-  # Unity Framework Integration via CocoaPods
-  pod 'UnityFramework', :path => './Frameworks/UnityFramework.framework'
+  # Unity Static Libraries Integration via CocoaPods
+  pod 'UnityFramework', :path => './'
   
   target 'RunnerTests' do
     inherit! :search_paths
