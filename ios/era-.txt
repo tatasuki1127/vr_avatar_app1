@@ -1,0 +1,443 @@
+ℹ️  [INFO] 🎯 HYBRID APPROACH: Mock Structure + Real Unity Data (Debug Enhanced)
+ℹ️  [INFO] Creating reliable framework structure, then replacing with real Unity components
+ℹ️  [INFO] Cleaning Flutter cache...
+Cleaning Xcode workspace...                                      1,363ms
+Deleting .dart_tool...                                               0ms
+ℹ️  [INFO] === PHASE 1: CREATING MOCK FRAMEWORK STRUCTURE ===
+🔍 [DEBUG] Removing existing Frameworks and Libraries directories...
+🔍 [DEBUG] Creating directory structure...
+🔍 [DEBUG] Framework structure created:
+🔍 [DEBUG]   📁 Frameworks/UnityFramework.framework/
+🔍 [DEBUG]   📁 Frameworks/UnityFramework.framework/Headers/
+🔍 [DEBUG]   📁 Frameworks/UnityFramework.framework/Modules/
+🔍 [DEBUG]   📁 Libraries/
+ℹ️  [INFO] Creating Unity headers...
+🔍 [DEBUG] Creating UnityFramework.h...
+🔍 [DEBUG] Creating UnityAppController.h...
+🔍 [DEBUG] Creating module.modulemap...
+🔍 [DEBUG] Creating Info.plist with CFBundleVersion...
+🔍 [DEBUG] Creating temporary mock binary...
+✅ [SUCCESS] Mock framework structure created successfully
+🔍 [DEBUG] Mock structure verification:
+🔍 [DEBUG]   📄 Headers: 5 files
+🔍 [DEBUG]   📄 Modules: 4 files
+🔍 [DEBUG]   📄 Info.plist: EXISTS
+🔍 [DEBUG]   📄 Mock binary: EXISTS (4.0K)
+ℹ️  [INFO] === PHASE 2: EXTRACTING REAL UNITY DATA ===
+ℹ️  [INFO] Extracting real Unity framework...
+🔍 [DEBUG] UnityFramework.zip size:  71M
+🔍 [DEBUG] Extracting UnityFramework.zip to temp_unity/...
+Archive:  ../UnityFramework.zip
+  inflating: UnityFramework          
+ℹ️  [INFO] Real Unity framework binary found (221M)
+🔍 [DEBUG] Unity binary info:
+🔍 [DEBUG]   📊 Size: 221M
+🔍 [DEBUG]   🔧 File type: UnityFramework: current ar archive
+🔍 [DEBUG]   🏗️  Architecture: Non-fat file: UnityFramework is architecture: arm64
+🔍 [DEBUG] Backing up mock binary...
+🔍 [DEBUG] Replacing mock binary with real Unity...
+✅ [SUCCESS] Real Unity framework binary installed (208M)
+🔍 [DEBUG] Replacement verification:
+🔍 [DEBUG]   📊 Mock size: 4.0K
+🔍 [DEBUG]   📊 Real size: 208M
+🔍 [DEBUG]   ✅ Replacement: SUCCESS
+ℹ️  [INFO] 🔧 INTEGRATION APPROACH: Merging static libraries into framework binary
+🔍 [DEBUG] Creating backup of original Unity framework binary...
+🔍 [DEBUG] Copying framework binary for integration...
+🔍 [DEBUG] Preparing for static library integration...
+🔍 [DEBUG] Target libraries for integration:
+🔍 [DEBUG]   📦 libbaselib.a (600K)
+🔍 [DEBUG]   📦 libiPhone-lib.a (208M)
+🔍 [DEBUG]   📦 libUnityARKit.a (14M)
+🔍 [DEBUG] Checking symbols in real Unity binary...
+🔍 [DEBUG] 🔍 Detailed symbol verification:
+🔍 [DEBUG]   📄 Binary path: ../Frameworks/UnityFramework.framework/UnityFramework
+🔍 [DEBUG]   📄 Binary exists: YES
+🔍 [DEBUG]   📄 Binary size: 208M
+🔍 [DEBUG]   📄 Binary permissions: -rw-r--r--
+🔍 [DEBUG] 🔧 Testing nm command...
+🔍 [DEBUG]   📊 nm command works:   317842 total symbols found
+🔍 [DEBUG] 🔍 Searching for critical symbols:
+🔍 [DEBUG]   ✅ Found: UnityDeviceCPUCount
+🔍 [DEBUG]   ✅ Found: il2cpp_array_length
+🔍 [DEBUG]   ✅ Found: AcquireDrawableMTL
+✅ [SUCCESS] Real Unity symbols verified (3/3 critical symbols,   317842 total)
+🔍 [DEBUG] Temporary Unity extraction directory cleaned up
+ℹ️  [INFO] Extracting real Unity libraries...
+🔍 [DEBUG] UnityLibraries.zip size:  75M
+🔍 [DEBUG] Extracting UnityLibraries.zip to temp_libs/...
+Archive:  ../UnityLibraries.zip
+  inflating: baselib.a               
+  inflating: libiPhone-lib.a         
+  inflating: libUnityARKit.a         
+🔍 [DEBUG] Extracted library files:
+-rwxrwxrwx  1 builder  staff     612200 Jul 14 10:47 baselib.a
+-rwxrwxrwx  1 builder  staff  218606880 Jul 14 10:47 libiPhone-lib.a
+-rwxrwxrwx  1 builder  staff   15170896 Jul 14 10:47 libUnityARKit.a
+🔍 [DEBUG] Processing library: baselib.a (600K, Non-fat file: baselib.a is architecture: arm64)
+🔍 [DEBUG] Renaming baselib.a to libbaselib.a for compatibility
+🔍 [DEBUG] 🔧 INTEGRATION: Extracting object files from baselib.a
+🔍 [DEBUG]   📦 Extracted        3 object files from baselib.a
+🔍 [DEBUG]   📝 Object files: Baselib_PlatformConfig_IOS_dgv63.o External_il2cpp_builds_external_baselib_Source_0_ejfnf.o External_il2cpp_builds_external_baselib_Source_1_ejfnf.o ...
+🔍 [DEBUG]   🔗 Integrating objects into UnityFramework binary...
+✅ [SUCCESS] Real Unity library: baselib.a -> libbaselib.a (integrated into framework)
+🔍 [DEBUG] Processing library: libiPhone-lib.a (222M, Non-fat file: libiPhone-lib.a is architecture: arm64)
+🔍 [DEBUG] 🔧 INTEGRATION: Extracting object files from libiPhone-lib.a
+🔍 [DEBUG]   📦 Extracted     1745 object files from libiPhone-lib.a
+🔍 [DEBUG]   📝 Object files: AccessibilityAction_p5ec7.o AccessibilityBindings.gen_i7wp1.o AccessibilityClassRegistrations.gen_nl2fs.o AccessibilityICallRegistration_f38vb.o AccessibilityManager_p5ec7.o ...
+🔍 [DEBUG]   🔗 Integrating objects into UnityFramework binary...
+✅ [SUCCESS] Real Unity library: libiPhone-lib.a -> libiPhone-lib.a (integrated into framework)
+🔍 [DEBUG] Processing library: libUnityARKit.a ( 14M, Non-fat file: libUnityARKit.a is architecture: arm64)
+🔍 [DEBUG] 🔧 INTEGRATION: Extracting object files from libUnityARKit.a
+🔍 [DEBUG]   📦 Extracted       48 object files from libUnityARKit.a
+🔍 [DEBUG]   📝 Object files: AllocatorConfig.o ApiExtensions.o ARCollaborationData-C-Bridge.o ARKitXRAnchorProvider.o ARKitXRCameraProvider.o ...
+🔍 [DEBUG]   🔗 Integrating objects into UnityFramework binary...
+✅ [SUCCESS] Real Unity library: libUnityARKit.a -> libUnityARKit.a (integrated into framework)
+ℹ️  [INFO] 🔗 FINAL INTEGRATION: Complete binary reconstruction
+🔍 [DEBUG] 📊 Creating completely new integrated binary...
+🔍 [DEBUG] 🔧 Extracting all objects from original Unity framework...
+🔍 [DEBUG]   📦 Extracted     1796 objects from original Unity
+🔍 [DEBUG] 🔧 Collecting all static library objects...
+🔍 [DEBUG]   📦 Added        3 objects from baselib.a.extracted
+🔍 [DEBUG]   📦 Added     1745 objects from libiPhone-lib.a.extracted
+🔍 [DEBUG]   📦 Added       48 objects from libUnityARKit.a.extracted
+🔍 [DEBUG] 📊 Total objects for new binary:     1796
+🔍 [DEBUG] 🔗 Creating new unified archive...
+🔍 [DEBUG] 📊 New unified binary size: 224M
+🔍 [DEBUG] 🔧 Setting framework binary properties...
+🔍 [DEBUG] 📊 Final framework binary size: 224M
+🔍 [DEBUG] 🔧 Framework binary permissions: -rwxr-xr-x
+🔍 [DEBUG] ✅ Framework binary is executable
+🔍 [DEBUG] 🔍 Testing symbols in reconstructed binary...
+🔍 [DEBUG]   📊 Total symbols in new binary:   336025
+🔍 [DEBUG]   ✅ Found in new binary: UnityDeviceCPUCount
+🔍 [DEBUG]   ✅ Found in new binary: il2cpp_array_length
+🔍 [DEBUG]   ✅ Found in new binary: AcquireDrawableMTL
+✅ [SUCCESS] Binary reconstruction successful: All symbols verified
+🔍 [DEBUG] 🔍 Final binary type: ../Frameworks/UnityFramework.framework/UnityFramework: current ar archive
+🔍 [DEBUG] ❌ Binary is not proper Mach-O format
+🔍 [DEBUG] 📂 Final directory check before Phase 3...
+🔍 [DEBUG] 📂 Current directory: /Users/builder/clone/ios
+🔍 [DEBUG] 📂 Ensuring correct working directory...
+🔍 [DEBUG] 📂 Moving to correct ios directory...
+🔍 [DEBUG] 📂 Current directory after cleanup: /Users/builder/clone/ios
+🔍 [DEBUG] Temporary library extraction directory cleaned up
+✅ [SUCCESS] Real Unity data extraction completed
+🔍 [DEBUG] Final Libraries directory contents (integration approach - may be empty):
+total 457800
+drwxr-xr-x   5 builder  staff        160 Jul 15 14:57 .
+drwxr-xr-x  14 builder  staff        448 Jul 15 14:57 ..
+-rwxr-xr-x   1 builder  staff     612200 Jul 15 14:57 libbaselib.a
+-rwxr-xr-x   1 builder  staff  218606880 Jul 15 14:57 libiPhone-lib.a
+-rwxr-xr-x   1 builder  staff   15170896 Jul 15 14:57 libUnityARKit.a
+ℹ️  [INFO] === PHASE 3: CREATING HYBRID PODSPEC ===
+🔍 [DEBUG] Creating hybrid podspec with FORCE_LOAD ONLY approach (SRCROOT path fix)...
+✅ [SUCCESS] Reconstruction podspec created
+🔍 [DEBUG] Podspec verification:
+🔍 [DEBUG]   📄 File exists: YES
+🔍 [DEBUG]   📄 Size: 4.0K
+🔍 [DEBUG]   🔧 Approach: COMPLETE RECONSTRUCTION + FORCE LINKING
+🔍 [DEBUG]   🔧 vendored_frameworks: Single reconstructed framework
+🔍 [DEBUG]   🔧 force_load flags: NONE, using -framework and -all_load instead
+🔍 [DEBUG]   🔧 Framework linking: Explicit -framework UnityFramework
+ℹ️  [INFO] === PHASE 4: FINAL VERIFICATION ===
+🔍 [DEBUG] Setting proper permissions...
+🔍 [DEBUG] 📂 Working directory: /Users/builder/clone/ios
+🔍 [DEBUG]   ✅ Framework permissions set
+ℹ️  [INFO] Final verification:
+✅ [SUCCESS] Unity framework binary: 224M
+✅ [SUCCESS] Integrated Unity binary confirmed (contains all libraries)
+🔍 [DEBUG]   📊 Framework size: 224M (Integrated Unity)
+🔍 [DEBUG]   🏗️  Architecture: Non-fat file: Frameworks/UnityFramework.framework/UnityFramework is architecture: arm64
+🔍 [DEBUG] Verifying Unity libraries (integration approach - libraries integrated into framework)...
+✅ [SUCCESS] Unity library backup: libbaselib.a (600K, Non-fat file: Libraries/libbaselib.a is architecture: arm64)
+✅ [SUCCESS] Unity library backup: libiPhone-lib.a (208M, Non-fat file: Libraries/libiPhone-lib.a is architecture: arm64)
+✅ [SUCCESS] Unity library backup: libUnityARKit.a ( 14M, Non-fat file: Libraries/libUnityARKit.a is architecture: arm64)
+🔍 [DEBUG] Verifying Info.plist for App Store Connect compatibility...
+✅ [SUCCESS] Info.plist has CFBundleVersion: 1.0.0 (App Store Connect ready)
+✅ [SUCCESS] Podspec: OK
+🔍 [DEBUG]   📄 Podspec contains vendored_libraries: 0
+🔍 [DEBUG]   📄 Podspec contains force_load: 9
+ℹ️  [INFO] Verifying symbols in integrated Unity binary:
+❌ [ERROR] Final binary not found at: ios/Frameworks/UnityFramework.framework/UnityFramework
+🔍 [DEBUG] 📂 Current directory: /Users/builder/clone/ios
+🔍 [DEBUG] 📂 Looking for framework...
+🔍 [DEBUG]   Found UnityFramework at: ./Frameworks/UnityFramework.framework/UnityFramework
+🔍 [DEBUG] === FINAL STRUCTURE SUMMARY ===
+🔍 [DEBUG] 📁 Frameworks/UnityFramework.framework/
+🔍 [DEBUG]   📄 UnityFramework: 224M
+🔍 [DEBUG]   📄 Info.plist: EXISTS
+🔍 [DEBUG]   📄 Headers: 2 files
+🔍 [DEBUG]   📄 Modules: 1 files
+🔍 [DEBUG] 📁 Libraries/
+🔍 [DEBUG]   📄 libbaselib.a: 600K
+🔍 [DEBUG]   📄 libiPhone-lib.a: 208M
+🔍 [DEBUG]   📄 libUnityARKit.a:  14M
+🔍 [DEBUG] 📄 UnityFramework.podspec: 4.0K
+✅ [SUCCESS] 🎯 HYBRID UNITY FRAMEWORK COMPLETED!
+ℹ️  [INFO] This hybrid approach provides:
+ℹ️  [INFO]   ✅ Reliable framework structure (from mock)
+ℹ️  [INFO]   ✅ Real Unity functionality (from zip files)
+ℹ️  [INFO]   ✅ App Store Connect compatibility (CFBundleVersion)
+ℹ️  [INFO]   ✅ Complete system framework dependencies
+ℹ️  [INFO]   ✅ COMPLETE RECONSTRUCTION + FORCE LINKING
+ℹ️  [INFO]   ✅ Explicit framework linking with -all_load
+ℹ️  [INFO] 
+ℹ️  [INFO] 🔧 Key fix: Complete reconstruction + executable flags + explicit framework linking
+ℹ️  [INFO] Expected result: Unity features should work AND build should succeed!
+✅ [SUCCESS] 🚀 Hybrid Unity script completed successfully
+
+Building iOS
+35s
+
+
+
+
+
+== Building for iOS ==
+
+> xcode-project use-profiles
+Configure code signing settings
+Searching for files matching /Users/builder/Library/MobileDevice/Provisioning Profiles/*.mobileprovision
+Searching for files matching /Users/builder/Library/MobileDevice/Provisioning Profiles/*.provisionprofile
+List available code signing certificates in keychain /Users/builder/Library/codemagic-cli-tools/keychains/15-07-25_ybkvmsuk.keychain-db
+Searching for files matching /Users/builder/clone/ios/**/*.xcodeproj
+Completed configuring code signing settings
+ - Using profile "VRAvatar ios_app_store 1752424314" [0a0d4f93-dd5f-4b65-ac1a-a0d958b09372] for target "Runner" [Debug] from project "Runner"
+ - Using profile "VRAvatar ios_app_store 1752424314" [0a0d4f93-dd5f-4b65-ac1a-a0d958b09372] for target "Runner" [Profile] from project "Runner"
+ - Using profile "VRAvatar ios_app_store 1752424314" [0a0d4f93-dd5f-4b65-ac1a-a0d958b09372] for target "Runner" [Release] from project "Runner"
+Generated options for exporting the project
+ - Method: app-store
+ - Provisioning Profiles:
+     - com.vr.avatar1: VRAvatar ios_app_store 1752424314
+ - Signing Certificate: Apple Distribution
+ - Signing Style: manual
+ - Team Id: 86M5KD75JM
+Saved export options to /Users/builder/export_options.plist
+
+> flutter build ipa --release --export-options-plist /Users/builder/export_options.plist
+Resolving dependencies...
+Downloading packages...
+  characters 1.4.0 (1.4.1 available)
+  flutter_lints 5.0.0 (6.0.0 available)
+  leak_tracker 10.0.9 (11.0.1 available)
+  leak_tracker_flutter_testing 3.0.9 (3.0.10 available)
+  leak_tracker_testing 3.0.1 (3.0.2 available)
+  lints 5.1.1 (6.0.0 available)
+  material_color_utilities 0.11.1 (0.13.0 available)
+  meta 1.16.0 (1.17.0 available)
+  permission_handler 11.4.0 (12.0.1 available)
+  permission_handler_android 12.1.0 (13.0.1 available)
+  test_api 0.7.4 (0.7.6 available)
+  vector_math 2.1.4 (2.2.0 available)
+  vm_service 15.0.0 (15.0.2 available)
+Got dependencies!
+13 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+Archiving com.vr.avatar1...
+Automatically signing iOS for device deployment using specified development team in Xcode project: 86M5KD75JM
+Running pod install...                                             926ms
+Running Xcode build...                                          
+Xcode archive done.                                         28.4s
+Failed to build iOS app
+Error (Xcode): Undefined symbol: _AcquireDrawableMTL
+
+Error (Xcode): Undefined symbol: _UnityDeviceCPUCount
+
+Error (Xcode): Undefined symbol: _UnityDeviceUniqueIdentifier
+
+Error (Xcode): Undefined symbol: _UnityDisplayManager_DisplayCount
+
+Error (Xcode): Undefined symbol: _UnityDisplayManager_DisplayRenderingResolution
+
+Error (Xcode): Undefined symbol: _UnityDisplayManager_PrimaryDisplayIndex
+
+Error (Xcode): Undefined symbol: _UnityGetGLView
+
+Error (Xcode): Undefined symbol: _UnityGetGLViewController
+
+Error (Xcode): Undefined symbol: _UnityGetJoystickNames
+
+Error (Xcode): Undefined symbol: _UnityGetMetalCommandQueue
+
+Error (Xcode): Undefined symbol: _Unity_il2cppNoExceptions
+
+Error (Xcode): Undefined symbol: _il2cpp_array_length
+
+Error (Xcode): Undefined symbol: _il2cpp_array_new
+
+Error (Xcode): Undefined symbol: _il2cpp_class_enum_basetype
+
+Error (Xcode): Undefined symbol: _il2cpp_class_from_name
+
+Error (Xcode): Undefined symbol: _il2cpp_class_from_system_type
+
+Error (Xcode): Undefined symbol: _il2cpp_class_from_type
+
+Error (Xcode): Undefined symbol: _il2cpp_class_get_assemblyname
+
+Error (Xcode): Undefined symbol: _il2cpp_class_get_declaring_type
+
+Error (Xcode): Undefined symbol: _il2cpp_class_get_field_from_name
+
+Error (Xcode): Undefined symbol: _il2cpp_class_get_fields
+
+Error (Xcode): Undefined symbol: _il2cpp_class_get_flags
+
+Error (Xcode): Undefined symbol: _il2cpp_class_get_image
+
+Error (Xcode): Undefined symbol: _il2cpp_class_get_methods
+
+Error (Xcode): Undefined symbol: _il2cpp_class_get_name
+
+Error (Xcode): Undefined symbol: _il2cpp_class_get_namespace
+
+Error (Xcode): Undefined symbol: _il2cpp_class_get_nested_types
+
+Error (Xcode): Undefined symbol: _il2cpp_class_get_parent
+
+Error (Xcode): Undefined symbol: _il2cpp_class_get_type
+
+Error (Xcode): Undefined symbol: _il2cpp_class_has_attribute
+
+Error (Xcode): Undefined symbol: _il2cpp_class_has_parent
+
+Error (Xcode): Undefined symbol: _il2cpp_class_instance_size
+
+Error (Xcode): Undefined symbol: _il2cpp_class_is_abstract
+
+Error (Xcode): Undefined symbol: _il2cpp_class_is_enum
+
+Error (Xcode): Undefined symbol: _il2cpp_class_is_generic
+
+Error (Xcode): Undefined symbol: _il2cpp_class_is_inflated
+
+Error (Xcode): Undefined symbol: _il2cpp_class_is_interface
+
+Error (Xcode): Undefined symbol: _il2cpp_class_is_subclass_of
+
+Error (Xcode): Undefined symbol: _il2cpp_class_is_valuetype
+
+Error (Xcode): Undefined symbol: _il2cpp_custom_attrs_construct
+
+Error (Xcode): Undefined symbol: _il2cpp_custom_attrs_free
+
+Error (Xcode): Undefined symbol: _il2cpp_custom_attrs_from_class
+
+Error (Xcode): Undefined symbol: _il2cpp_custom_attrs_from_method
+
+Error (Xcode): Undefined symbol: _il2cpp_custom_attrs_get_attr
+
+Error (Xcode): Undefined symbol: _il2cpp_custom_attrs_has_attr
+
+Error (Xcode): Undefined symbol: _il2cpp_domain_get
+
+Error (Xcode): Undefined symbol: _il2cpp_exception_from_name_msg
+
+Error (Xcode): Undefined symbol: _il2cpp_field_get_flags
+
+Error (Xcode): Undefined symbol: _il2cpp_field_get_name
+
+Error (Xcode): Undefined symbol: _il2cpp_field_get_offset
+
+Error (Xcode): Undefined symbol: _il2cpp_field_get_parent
+
+Error (Xcode): Undefined symbol: _il2cpp_field_get_type
+
+Error (Xcode): Undefined symbol: _il2cpp_field_get_value
+
+Error (Xcode): Undefined symbol: _il2cpp_field_has_attribute
+
+Error (Xcode): Undefined symbol: _il2cpp_free
+
+Error (Xcode): Undefined symbol: _il2cpp_gc_enable
+
+Error (Xcode): Undefined symbol: _il2cpp_gc_get_heap_size
+
+Error (Xcode): Undefined symbol: _il2cpp_gc_get_used_size
+
+Error (Xcode): Undefined symbol: _il2cpp_gc_wbarrier_set_field
+
+Error (Xcode): Undefined symbol: _il2cpp_gchandle_free
+
+Error (Xcode): Undefined symbol: _il2cpp_gchandle_get_target
+
+Error (Xcode): Undefined symbol: _il2cpp_gchandle_new
+
+Error (Xcode): Undefined symbol: _il2cpp_gchandle_new_weakref
+
+Error (Xcode): Undefined symbol: _il2cpp_get_corlib
+
+Error (Xcode): Undefined symbol: _il2cpp_image_get_class
+
+Error (Xcode): Undefined symbol: _il2cpp_image_get_class_count
+
+Error (Xcode): Undefined symbol: _il2cpp_method_get_class
+
+Error (Xcode): Undefined symbol: _il2cpp_method_get_from_reflection
+
+Error (Xcode): Undefined symbol: _il2cpp_method_get_name
+
+Error (Xcode): Undefined symbol: _il2cpp_method_get_param
+
+Error (Xcode): Undefined symbol: _il2cpp_method_get_param_count
+
+Error (Xcode): Undefined symbol: _il2cpp_method_get_return_type
+
+Error (Xcode): Undefined symbol: _il2cpp_method_is_generic
+
+Error (Xcode): Undefined symbol: _il2cpp_method_is_inflated
+
+Error (Xcode): Undefined symbol: _il2cpp_method_is_instance
+
+Error (Xcode): Undefined symbol: _il2cpp_native_stack_trace
+
+Error (Xcode): Undefined symbol: _il2cpp_object_get_class
+
+Error (Xcode): Undefined symbol: _il2cpp_object_get_virtual_method
+
+Error (Xcode): Undefined symbol: _il2cpp_object_new
+
+Error (Xcode): Undefined symbol: _il2cpp_runtime_invoke
+
+Error (Xcode): Undefined symbol: _il2cpp_runtime_invoke_convert_args
+
+Error (Xcode): Undefined symbol: _il2cpp_runtime_object_init_exception
+
+Error (Xcode): Undefined symbol: _il2cpp_string_chars
+
+Error (Xcode): Undefined symbol: _il2cpp_string_length
+
+Error (Xcode): Undefined symbol: _il2cpp_string_new_len
+
+Error (Xcode): Undefined symbol: _il2cpp_string_new_wrapper
+
+Error (Xcode): Undefined symbol: _il2cpp_thread_attach
+
+Error (Xcode): Undefined symbol: _il2cpp_thread_current
+
+Error (Xcode): Undefined symbol: _il2cpp_type_equals
+
+Error (Xcode): Undefined symbol: _il2cpp_type_get_assembly_qualified_name
+
+Error (Xcode): Undefined symbol: _il2cpp_type_get_class_or_element_class
+
+Error (Xcode): Undefined symbol: _il2cpp_type_get_name
+
+Error (Xcode): Undefined symbol: _il2cpp_type_get_object
+
+Error (Xcode): Undefined symbol: _il2cpp_type_get_reflection_name
+
+Error (Xcode): Undefined symbol: _il2cpp_type_get_type
+
+Error (Xcode): Undefined symbol: _il2cpp_type_is_byref
+
+Error (Xcode): Undefined symbol: _il2cpp_unhandled_exception
+
+Error (Xcode): Linker command failed with exit code 1 (use -v to see invocation)
+
+Encountered error while archiving for device.
+
+
+Build failed :|
+Failed to build for iOS

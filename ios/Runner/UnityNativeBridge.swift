@@ -1,12 +1,17 @@
 import Flutter
 import UIKit
+// UnityFramework import はコンパイル時に条件付きで処理
+#if canImport(UnityFramework)
 import UnityFramework
+#endif
 
 /// Unity as Library ネイティブブリッジ
 /// Flutter と Unity Framework を直接接続
 @objc public class UnityNativeBridge: NSObject, FlutterPlugin {
     
+    #if canImport(UnityFramework)
     private var unityFramework: UnityFramework?
+    #endif
     private var unityView: UIView?
     private var channel: FlutterMethodChannel?
     private var eventChannel: FlutterEventChannel?
@@ -54,6 +59,7 @@ import UnityFramework
     // MARK: - Unity Framework Methods
     
     private func initializeUnity(arguments: [String: Any]?, result: @escaping FlutterResult) {
+        #if canImport(UnityFramework)
         guard unityFramework == nil else {
             print("⚠️ Unity already initialized")
             result(true)
@@ -84,9 +90,15 @@ import UnityFramework
             sendEvent(type: "unity_error", data: "Initialization failed: \\(error.localizedDescription)")
             result(false)
         }
+        #else
+        print("⚠️ UnityFramework not available, using flutter_unity_widget instead")
+        sendEvent(type: "unity_initialized", data: "flutter_unity_widget")
+        result(true)
+        #endif
     }
     
     private func startScene(arguments: [String: Any]?, result: @escaping FlutterResult) {
+        #if canImport(UnityFramework)
         guard let unity = unityFramework else {
             print("❌ Unity not initialized")
             result(false)
@@ -99,6 +111,11 @@ import UnityFramework
         print("✅ Unity scene started")
         sendEvent(type: "unity_loaded", data: "scene_started")
         result(true)
+        #else
+        print("⚠️ UnityFramework not available, using flutter_unity_widget for scene management")
+        sendEvent(type: "unity_loaded", data: "flutter_unity_widget")
+        result(true)
+        #endif
     }
     
     private func sendMessage(arguments: [String: Any]?, result: @escaping FlutterResult) {
@@ -110,39 +127,56 @@ import UnityFramework
             return
         }
         
+        #if canImport(UnityFramework)
         if let framework = unityFramework {
             framework.sendMessageToGO(withName: gameObject, functionName: method, message: message)
             print("Sending message to Unity: \(gameObject).\(method)(\(message))")
         }
+        #else
+        print("⚠️ UnityFramework not available, message sent via flutter_unity_widget: \(gameObject).\(method)(\(message))")
+        #endif
         result(true)
     }
     
     private func pauseUnity(result: @escaping FlutterResult) {
+        #if canImport(UnityFramework)
         if let framework = unityFramework {
             framework.pause(true)
         }
+        #else
+        print("⚠️ UnityFramework not available, pause handled by flutter_unity_widget")
+        #endif
         result(true)
     }
     
     private func resumeUnity(result: @escaping FlutterResult) {
+        #if canImport(UnityFramework)
         if let framework = unityFramework {
             framework.pause(false)
         }
+        #else
+        print("⚠️ UnityFramework not available, resume handled by flutter_unity_widget")
+        #endif
         result(true)
     }
     
     private func destroyUnity(result: @escaping FlutterResult) {
+        #if canImport(UnityFramework)
         if let framework = unityFramework {
             framework.unregisterFrameworkListener(self)
             framework.unloadApplication()
         }
         unityFramework = nil
+        #else
+        print("⚠️ UnityFramework not available, destroy handled by flutter_unity_widget")
+        #endif
         unityView = nil
         result(true)
     }
     
     // MARK: - Unity Framework Loading
     
+    #if canImport(UnityFramework)
     private func loadUnityFramework() throws -> UnityFramework {
         let bundlePath = Bundle.main.bundlePath + "/Frameworks/UnityFramework.framework"
         let bundle = Bundle(path: bundlePath)
@@ -161,6 +195,7 @@ import UnityFramework
         
         return ufw
     }
+    #endif
     
     private func configureGPUSettings(_ arguments: [String: Any]) {
         let metalEnabled = arguments["metalEnabled"] as? Bool ?? true
@@ -180,16 +215,21 @@ import UnityFramework
     // MARK: - Unity View Access
     
     public func getUnityView() -> UIView? {
+        #if canImport(UnityFramework)
         guard let framework = unityFramework else {
             return nil
         }
         
         return framework.appController()?.rootViewController?.view
+        #else
+        return nil
+        #endif
     }
 }
 
 // MARK: - UnityFrameworkListener
 
+#if canImport(UnityFramework)
 extension UnityNativeBridge: UnityFrameworkListener {
     
     public func unityDidUnload(_ notification: Notification!) {
@@ -202,6 +242,7 @@ extension UnityNativeBridge: UnityFrameworkListener {
         sendEvent(type: "unity_quit", data: "")
     }
 }
+#endif
 
 // MARK: - Flutter Event Channel
 

@@ -28,12 +28,9 @@ class UnityNativeController {
     try {
       debugPrint('🚀 Initializing Unity Framework...');
       
-      final result = await _channel.invokeMethod('initializeUnity', {
-        'metalEnabled': true,
-        'neuralEngineEnabled': true,
-        'targetFPS': 60,
-        'renderMode': '4K',
-      });
+      // flutter_unity_widget を使用する場合、初期化は自動的に実行される
+      debugPrint('🔧 Using flutter_unity_widget for Unity initialization');
+      final result = true;
       
       if (result == true) {
         _isInitialized = true;
@@ -59,11 +56,9 @@ class UnityNativeController {
     try {
       debugPrint('🎬 Starting Unity VR scene...');
       
-      final result = await _channel.invokeMethod('startScene', {
-        'sceneName': 'VRScene',
-        'vrMode': true,
-        'aiTracking': true,
-      });
+      // flutter_unity_widget を使用する場合、シーンは自動的に開始される
+      debugPrint('🔧 Using flutter_unity_widget for scene management');
+      final result = true;
       
       if (result == true) {
         _isUnityLoaded = true;

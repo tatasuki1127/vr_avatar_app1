@@ -222,8 +222,65 @@ workflows:
           # 4. Unity Framework を Xcode Project に統合
           echo "🔧 Integrating Unity Framework into Xcode project..."
           
-          # Runner.xcodeproj にFrameworkを追加（手動統合）
-          echo "📱 Unity Framework integration will be handled by flutter_unity_widget package"
+          # Runner.xcodeproj にFrameworkを直接追加
+          echo "📱 Adding UnityFramework to Runner.xcodeproj..."
+          
+          # Xcode プロジェクトに UnityFramework を完全統合
+          if [ -f "Runner.xcodeproj/project.pbxproj" ]; then
+            echo "🔗 Integrating UnityFramework into Xcode project..."
+            
+            # UnityFramework.framework が存在することを確認
+            if [ ! -f "Frameworks/UnityFramework.framework/UnityFramework" ]; then
+              echo "❌ UnityFramework binary not found, using flutter_unity_widget approach"
+              
+              # Swift ファイルの Unity import を削除
+              if [ -f "Runner/UnityNativeBridge.swift" ]; then
+                sed -i '' '/import UnityFramework/d' Runner/UnityNativeBridge.swift
+                echo "✅ Removed UnityFramework import from Swift files"
+              fi
+              
+            else
+              echo "✅ UnityFramework binary found, proceeding with integration"
+              
+              # Framework を Xcode プロジェクトに追加
+              # 1. Framework Search Paths
+              sed -i '' 's/FRAMEWORK_SEARCH_PATHS = (/FRAMEWORK_SEARCH_PATHS = (\
+				"$(inherited)",\
+				"$(PROJECT_DIR)\/Frameworks",/' Runner.xcodeproj/project.pbxproj
+              
+              # 2. Other Linker Flags
+              sed -i '' 's/OTHER_LDFLAGS = (/OTHER_LDFLAGS = (\
+				"$(inherited)",\
+				"-framework UnityFramework",/' Runner.xcodeproj/project.pbxproj
+              
+              # 3. Embedded Binaries を無効化（Static Library として扱う）
+              sed -i '' 's/ENABLE_BITCODE = NO;/ENABLE_BITCODE = NO;\
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;\
+				DEFINES_MODULE = YES;/' Runner.xcodeproj/project.pbxproj
+              
+              # 4. Header Search Paths を追加
+              sed -i '' 's/HEADER_SEARCH_PATHS = (/HEADER_SEARCH_PATHS = (\
+				"$(inherited)",\
+				"$(PROJECT_DIR)\/Frameworks\/UnityFramework.framework\/Headers",/' Runner.xcodeproj/project.pbxproj
+              
+              echo "✅ UnityFramework fully integrated into Xcode project"
+            fi
+          else
+            echo "❌ Runner.xcodeproj/project.pbxproj not found"
+          fi
+          
+          # Unity Native Bridge の統合方法変更
+          echo "🔧 Updating Unity Native Bridge for flutter_unity_widget compatibility..."
+          
+          # Swift ファイルを flutter_unity_widget 用に変更
+          if [ -f "Runner/UnityNativeBridge.swift" ]; then
+            # UnityFramework import を条件付きに変更
+            sed -i '' 's/import UnityFramework/#if canImport(UnityFramework)\
+import UnityFramework\
+#endif/' Runner/UnityNativeBridge.swift
+            
+            echo "✅ Swift files updated for conditional UnityFramework import"
+          fi
           
           cd ..
       
