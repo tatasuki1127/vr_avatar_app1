@@ -10,13 +10,13 @@ workflows:
     # integrations:
     #   app_store_connect: codemagic
     environment:
-      ios_signing:
-        distribution_type: development
-        bundle_identifier: com.vr.avatar1
+      # ios_signing:
+      #   distribution_type: development
+      #   bundle_identifier: com.vr.avatar1
       vars:
         XCODE_WORKSPACE: "ios/Runner.xcworkspace"
         XCODE_SCHEME: "Runner"
-        APP_ID: 6748548295
+        BUNDLE_ID: "com.example.vr_avatar_app"
       flutter: stable
       xcode: latest
       cocoapods: default
@@ -154,15 +154,19 @@ workflows:
           ls -la Frameworks/
           cd ..
       
-      - name: Build iOS app
+      - name: Build iOS app (No Code Signing)
         script: |
-          # GPU最適化ビルド（仕様書準拠）
+          # Unity as Library統合テスト用ビルド（署名なし）
           flutter build ios --release \
             --dart-define=GPU_OPTIMIZATION=true \
             --dart-define=NEURAL_ENGINE=true \
             --dart-define=METAL_API=true \
             --dart-define=TARGET_FPS=60 \
             --no-codesign
+          
+          echo "✅ Flutter build completed successfully!"
+          echo "📦 Build artifacts:"
+          ls -la build/ios/Release-iphoneos/
       
       # - name: Build .ipa with Xcode
       #   script: |
@@ -172,7 +176,7 @@ workflows:
       #       --archive-flags "-destination 'generic/platform=iOS'"
     
     artifacts:
-      - build/ios/ipa/*.ipa
+      - build/ios/Release-iphoneos/*.app
       - /tmp/xcodebuild_logs/*.log
       - flutter_drive.log
     
