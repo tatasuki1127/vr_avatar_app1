@@ -245,23 +245,23 @@ workflows:
               # Framework を Xcode プロジェクトに追加
               # 1. Framework Search Paths
               sed -i '' 's/FRAMEWORK_SEARCH_PATHS = (/FRAMEWORK_SEARCH_PATHS = (\
-				"$(inherited)",\
-				"$(PROJECT_DIR)\/Frameworks",/' Runner.xcodeproj/project.pbxproj
+                "$(inherited)",\
+                "$(PROJECT_DIR)\/Frameworks",/' Runner.xcodeproj/project.pbxproj
               
               # 2. Other Linker Flags
               sed -i '' 's/OTHER_LDFLAGS = (/OTHER_LDFLAGS = (\
-				"$(inherited)",\
-				"-framework UnityFramework",/' Runner.xcodeproj/project.pbxproj
+                "$(inherited)",\
+                "-framework UnityFramework",/' Runner.xcodeproj/project.pbxproj
               
               # 3. Embedded Binaries を無効化（Static Library として扱う）
               sed -i '' 's/ENABLE_BITCODE = NO;/ENABLE_BITCODE = NO;\
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;\
-				DEFINES_MODULE = YES;/' Runner.xcodeproj/project.pbxproj
+                BUILD_LIBRARY_FOR_DISTRIBUTION = YES;\
+                DEFINES_MODULE = YES;/' Runner.xcodeproj/project.pbxproj
               
               # 4. Header Search Paths を追加
               sed -i '' 's/HEADER_SEARCH_PATHS = (/HEADER_SEARCH_PATHS = (\
-				"$(inherited)",\
-				"$(PROJECT_DIR)\/Frameworks\/UnityFramework.framework\/Headers",/' Runner.xcodeproj/project.pbxproj
+                "$(inherited)",\
+                "$(PROJECT_DIR)\/Frameworks\/UnityFramework.framework\/Headers",/' Runner.xcodeproj/project.pbxproj
               
               echo "✅ UnityFramework fully integrated into Xcode project"
             fi
