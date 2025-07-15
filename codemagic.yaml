@@ -269,18 +269,8 @@ workflows:
             echo "❌ Runner.xcodeproj/project.pbxproj not found"
           fi
           
-          # Unity Native Bridge の統合方法変更
-          echo "🔧 Updating Unity Native Bridge for flutter_unity_widget compatibility..."
-          
-          # Swift ファイルを flutter_unity_widget 用に変更
-          if [ -f "Runner/UnityNativeBridge.swift" ]; then
-            # UnityFramework import を条件付きに変更
-            sed -i '' 's/import UnityFramework/#if canImport(UnityFramework)\
-import UnityFramework\
-#endif/' Runner/UnityNativeBridge.swift
-            
-            echo "✅ Swift files updated for conditional UnityFramework import"
-          fi
+          # Unity Native Bridge は既に修正済み
+          echo "✅ Unity Native Bridge already configured for flutter_unity_widget compatibility"
           
           cd ..
       
