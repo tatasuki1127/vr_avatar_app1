@@ -115,8 +115,7 @@ workflows:
             mkdir -p "Frameworks/UnityFramework.framework/Data"
             
             # 空のInfo.plistを作成
-            cat > "Frameworks/UnityFramework.framework/Info.plist" << 'EOF'
-<?xml version="1.0" encoding="UTF-8"?>
+            echo '<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
@@ -129,8 +128,7 @@ workflows:
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 </dict>
-</plist>
-EOF
+</plist>' > "Frameworks/UnityFramework.framework/Info.plist"
           fi
           
           # 2. UnityLibraries 展開
@@ -181,8 +179,7 @@ EOF
               mkdir -p "$FRAMEWORK_PATH/Headers"
               
               # 基本的なUnityFramework.hを生成
-              cat > "$FRAMEWORK_PATH/Headers/UnityFramework.h" << 'EOF'
-#import <Foundation/Foundation.h>
+              echo '#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -203,19 +200,16 @@ NS_ASSUME_NONNULL_BEGIN
 - (id)appController;
 @end
 
-NS_ASSUME_NONNULL_END
-EOF
+NS_ASSUME_NONNULL_END' > "$FRAMEWORK_PATH/Headers/UnityFramework.h"
               echo "✅ Generated UnityFramework.h"
               
               # module.modulemap 生成
-              cat > "$FRAMEWORK_PATH/Headers/module.modulemap" << 'EOF'
-framework module UnityFramework {
+              echo 'framework module UnityFramework {
   umbrella header "UnityFramework.h"
   
   export *
   module * { export * }
-}
-EOF
+}' > "$FRAMEWORK_PATH/Headers/module.modulemap"
               echo "✅ Generated module.modulemap"
             fi
             
