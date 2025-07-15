@@ -7,11 +7,11 @@ workflows:
     name: iOS VR Avatar App
     max_build_duration: 120
     instance_type: mac_mini_m1
-    integrations:
-      app_store_connect: codemagic
+    # integrations:
+    #   app_store_connect: codemagic
     environment:
       ios_signing:
-        distribution_type: app_store
+        distribution_type: development
         bundle_identifier: com.vr.avatar1
       vars:
         XCODE_WORKSPACE: "ios/Runner.xcworkspace"
@@ -21,10 +21,10 @@ workflows:
       xcode: latest
       cocoapods: default
     scripts:
-      - name: Set up provisioning profiles
-        script: |
-          # CodeMagic自動プロビジョニング
-          xcode-project use-profiles
+      # - name: Set up provisioning profiles
+      #   script: |
+      #     # CodeMagic自動プロビジョニング
+      #     xcode-project use-profiles
       
       - name: Get Flutter packages
         script: |
@@ -164,12 +164,12 @@ workflows:
             --dart-define=TARGET_FPS=60 \
             --no-codesign
       
-      - name: Build .ipa with Xcode
-        script: |
-          xcode-project build-ipa \
-            --workspace "$XCODE_WORKSPACE" \
-            --scheme "$XCODE_SCHEME" \
-            --archive-flags "-destination 'generic/platform=iOS'"
+      # - name: Build .ipa with Xcode
+      #   script: |
+      #     xcode-project build-ipa \
+      #       --workspace "$XCODE_WORKSPACE" \
+      #       --scheme "$XCODE_SCHEME" \
+      #       --archive-flags "-destination 'generic/platform=iOS'"
     
     artifacts:
       - build/ios/ipa/*.ipa
@@ -183,10 +183,10 @@ workflows:
         notify:
           success: true
           failure: true
-      app_store_connect:
-        auth: integration
-        submit_to_testflight: true
-        submit_to_app_store: false
+      # app_store_connect:
+      #   auth: integration
+      #   submit_to_testflight: true
+      #   submit_to_app_store: false
 
   debug-workflow:
     name: iOS Debug Build
