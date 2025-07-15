@@ -37,6 +37,10 @@ workflows:
           echo "🔍 Checking flutter_unity_widget..."
           flutter packages pub deps | grep flutter_unity_widget || echo "⚠️ flutter_unity_widget not found"
           
+          # pubspec.yaml 確認
+          echo "📋 pubspec.yaml dependencies:"
+          grep -A 20 "dependencies:" pubspec.yaml
+          
       - name: Verify Flutter iOS setup
         script: |
           echo "🔍 Verifying Flutter iOS configuration..."
@@ -58,19 +62,6 @@ workflows:
             exit 1
           fi
           
-      - name: Install CocoaPods dependencies
-        script: |
-          echo "🍎 Installing CocoaPods dependencies..."
-          cd ios
-          
-          # CocoaPods キャッシュクリア
-          pod cache clean --all || true
-          rm -rf Pods/ || true
-          rm -rf ~/Library/Caches/CocoaPods || true
-          
-          # CocoaPods install
-          pod install --repo-update --verbose
-      
       - name: Unity Framework Headers Validation
         script: |
           # Unity Framework headers確認・復元スクリプト
@@ -188,7 +179,31 @@ workflows:
           echo "🎯 Unity as Library setup completed successfully!"
           echo "📊 Final structure:"
           ls -la Frameworks/
+          
+          # 4. Unity Framework を Xcode Project に統合
+          echo "🔧 Integrating Unity Framework into Xcode project..."
+          
+          # Runner.xcodeproj にFrameworkを追加（手動統合）
+          echo "📱 Unity Framework integration will be handled by flutter_unity_widget package"
+          
           cd ..
+      
+      - name: Install CocoaPods dependencies
+        script: |
+          echo "🍎 Installing CocoaPods dependencies..."
+          cd ios
+          
+          # Podfile確認
+          echo "📋 Current Podfile:"
+          cat Podfile
+          
+          # CocoaPods キャッシュクリア
+          pod cache clean --all || true
+          rm -rf Pods/ || true
+          rm -rf ~/Library/Caches/CocoaPods || true
+          
+          # CocoaPods install
+          pod install --repo-update --verbose
       
       - name: Build iOS app (No Code Signing)
         script: |
