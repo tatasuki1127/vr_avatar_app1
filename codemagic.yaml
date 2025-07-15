@@ -115,20 +115,7 @@ workflows:
             mkdir -p "Frameworks/UnityFramework.framework/Data"
             
             # 空のInfo.plistを作成
-            echo '<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-	<key>CFBundleExecutable</key>
-	<string>UnityFramework</string>
-	<key>CFBundleIdentifier</key>
-	<string>com.example.UnityFramework</string>
-	<key>CFBundlePackageType</key>
-	<string>FMWK</string>
-	<key>CFBundleVersion</key>
-	<string>1.0</string>
-</dict>
-</plist>' > "Frameworks/UnityFramework.framework/Info.plist"
+            printf '%s\n' '<?xml version="1.0" encoding="UTF-8"?>' '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">' '<plist version="1.0">' '<dict>' '	<key>CFBundleExecutable</key>' '	<string>UnityFramework</string>' '	<key>CFBundleIdentifier</key>' '	<string>com.example.UnityFramework</string>' '	<key>CFBundlePackageType</key>' '	<string>FMWK</string>' '	<key>CFBundleVersion</key>' '	<string>1.0</string>' '</dict>' '</plist>' > "Frameworks/UnityFramework.framework/Info.plist"
           fi
           
           # 2. UnityLibraries 展開
@@ -179,37 +166,11 @@ workflows:
               mkdir -p "$FRAMEWORK_PATH/Headers"
               
               # 基本的なUnityFramework.hを生成
-              echo '#import <Foundation/Foundation.h>
-
-NS_ASSUME_NONNULL_BEGIN
-
-@protocol UnityFrameworkListener <NSObject>
-- (void)unityDidUnload:(NSNotification*)notification;
-- (void)unityDidQuit:(NSNotification*)notification;
-@end
-
-@interface UnityFramework : NSObject
-+ (UnityFramework*)getInstance;
-- (void)setDataBundleId:(const char*)bundleId;
-- (void)runEmbeddedWithArgc:(int)argc argv:(char*[])argv appLaunchOpts:(NSDictionary*)appLaunchOpts;
-- (void)unloadApplication;
-- (void)sendMessageToGOWithName:(const char*)name functionName:(const char*)func message:(const char*)msg;
-- (void)pause:(bool)pause;
-- (void)register:(id<UnityFrameworkListener>)listener;
-- (void)unregisterFrameworkListener:(id<UnityFrameworkListener>)listener;
-- (id)appController;
-@end
-
-NS_ASSUME_NONNULL_END' > "$FRAMEWORK_PATH/Headers/UnityFramework.h"
+              printf '%s\n' '#import <Foundation/Foundation.h>' '' 'NS_ASSUME_NONNULL_BEGIN' '' '@protocol UnityFrameworkListener <NSObject>' '- (void)unityDidUnload:(NSNotification*)notification;' '- (void)unityDidQuit:(NSNotification*)notification;' '@end' '' '@interface UnityFramework : NSObject' '+ (UnityFramework*)getInstance;' '- (void)setDataBundleId:(const char*)bundleId;' '- (void)runEmbeddedWithArgc:(int)argc argv:(char*[])argv appLaunchOpts:(NSDictionary*)appLaunchOpts;' '- (void)unloadApplication;' '- (void)sendMessageToGOWithName:(const char*)name functionName:(const char*)func message:(const char*)msg;' '- (void)pause:(bool)pause;' '- (void)register:(id<UnityFrameworkListener>)listener;' '- (void)unregisterFrameworkListener:(id<UnityFrameworkListener>)listener;' '- (id)appController;' '@end' '' 'NS_ASSUME_NONNULL_END' > "$FRAMEWORK_PATH/Headers/UnityFramework.h"
               echo "✅ Generated UnityFramework.h"
               
               # module.modulemap 生成
-              echo 'framework module UnityFramework {
-  umbrella header "UnityFramework.h"
-  
-  export *
-  module * { export * }
-}' > "$FRAMEWORK_PATH/Headers/module.modulemap"
+              printf '%s\n' 'framework module UnityFramework {' '  umbrella header "UnityFramework.h"' '  ' '  export *' '  module * { export * }' '}' > "$FRAMEWORK_PATH/Headers/module.modulemap"
               echo "✅ Generated module.modulemap"
             fi
             
