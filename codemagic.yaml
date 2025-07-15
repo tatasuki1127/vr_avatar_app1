@@ -165,7 +165,7 @@ workflows:
           #endif
           EOF
           
-          # Module map
+          # Module map (両方の場所に配置)
           cat > "Frameworks/UnityFramework.framework/Modules/module.modulemap" << 'EOF'
           framework module UnityFramework {
               umbrella header "UnityFramework.h"
@@ -174,6 +174,9 @@ workflows:
               link "UnityFramework"
           }
           EOF
+          
+          # Copy module map to Headers directory as well
+          cp "Frameworks/UnityFramework.framework/Modules/module.modulemap" "Frameworks/UnityFramework.framework/Headers/"
           
           # App Store Connect対応のInfo.plist
           cat > "Frameworks/UnityFramework.framework/Info.plist" << 'EOF'
@@ -410,7 +413,7 @@ workflows:
             spec.preserve_paths = ["Frameworks/**/*", "Libraries/**/*"]
             spec.public_header_files = "Frameworks/UnityFramework.framework/Headers/**/*.h"
             spec.source_files = "Frameworks/UnityFramework.framework/Headers/**/*.h"
-            spec.module_map = "Frameworks/UnityFramework.framework/Modules/module.modulemap"
+            spec.module_map = "Frameworks/UnityFramework.framework/Headers/module.modulemap"
           
             spec.frameworks = [
               "Foundation", "UIKit", "Metal", "AudioToolbox",
@@ -535,6 +538,8 @@ workflows:
           # Verify Unity Framework integration
           if [ -d "Pods/UnityFramework" ]; then
             echo "✅ UnityFramework pod successfully integrated"
+            echo "📊 UnityFramework pod contents:"
+            ls -la "Pods/UnityFramework/" || echo "No contents found"
           else
             echo "⚠️ UnityFramework pod not found - checking flutter_unity_widget"
             if [ -d "Pods/flutter_unity_widget" ]; then
@@ -542,6 +547,15 @@ workflows:
             else
               echo "❌ Neither UnityFramework nor flutter_unity_widget pods found"
             fi
+          fi
+          
+          # Verify Module Map accessibility
+          if [ -f "Frameworks/UnityFramework.framework/Headers/module.modulemap" ]; then
+            echo "✅ Module map accessible in Headers directory"
+            echo "📋 Module map contents:"
+            cat "Frameworks/UnityFramework.framework/Headers/module.modulemap"
+          else
+            echo "❌ Module map not found in Headers directory"
           fi
           
           # Verify Framework files
