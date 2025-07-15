@@ -4,6 +4,7 @@ framework module UnityFramework {
     header "RenderPluginDelegate.h"
     header "LifeCycleListener.h"
     export *
-    module * { export * }
+    link "c++"
+    link "z"
     link "UnityFramework"
 }

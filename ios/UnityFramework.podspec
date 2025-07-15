@@ -18,7 +18,10 @@ Pod::Spec.new do |spec|
   spec.preserve_paths = ["Frameworks/**/*"]
   spec.public_header_files = "Frameworks/UnityFramework.framework/Headers/**/*.h"
   spec.source_files = "Frameworks/UnityFramework.framework/Headers/**/*.h"
-  spec.module_map = "Frameworks/UnityFramework.framework/Modules/module.modulemap"
+  spec.module_map = "Frameworks/UnityFramework.framework/Headers/module.modulemap"
+  
+  # CocoaPods で正しく認識されるように header_mappings_dir を追加
+  spec.header_mappings_dir = "Frameworks/UnityFramework.framework/Headers"
   
   spec.frameworks = [
     "Foundation", "UIKit", "Metal", "AudioToolbox",
