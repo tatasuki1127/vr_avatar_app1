@@ -66,6 +66,9 @@ post_install do |installer|
         config.build_settings['FRAMEWORK_SEARCH_PATHS'] ||= []
         config.build_settings['FRAMEWORK_SEARCH_PATHS'] << '$(PROJECT_DIR)/Frameworks'
         config.build_settings['FRAMEWORK_SEARCH_PATHS'] << '$(SRCROOT)/Frameworks'
+        config.build_settings['HEADER_SEARCH_PATHS'] ||= []
+        config.build_settings['HEADER_SEARCH_PATHS'] << '$(PROJECT_DIR)/Frameworks/UnityFramework.framework/Headers'
+        config.build_settings['HEADER_SEARCH_PATHS'] << '$(SRCROOT)/Frameworks/UnityFramework.framework/Headers'
         config.build_settings['OTHER_LDFLAGS'] ||= []
         config.build_settings['OTHER_LDFLAGS'] << '-framework UnityFramework'
         config.build_settings['OTHER_LDFLAGS'] << '-ObjC'
