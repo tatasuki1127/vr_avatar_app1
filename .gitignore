@@ -50,12 +50,12 @@ ios/Frameworks/UnityFramework.framework/UnityFramework
 ios/Frameworks/UnityFramework.framework/*.plist
 ios/Frameworks/UnityFramework.framework/*.txt
 ios/Frameworks/UnityFramework.framework/*.xcprivacy
-ios/Frameworks/UnityFramework.framework/*.podspec
 # Headers と Modules は追跡する（必須）
 !ios/Frameworks/UnityFramework.framework/Headers/
 !ios/Frameworks/UnityFramework.framework/Modules/
-# UnityFramework.zip は Git に含める
+# UnityFramework.zip と podspec は Git に含める
 !ios/UnityFramework.zip
+!ios/UnityFramework.podspec
 unity_framework/
 
 # Unity静的ライブラリ（大容量ファイル） - zip圧縮で管理
@@ -90,5 +90,5 @@ vr_avatar_cache/
 character_models_cache/
 pose_estimation_cache/
 Libraries_backup/
-ios/Frameworks/
+# ios/Frameworks/ は上で個別に管理
 ios/Libraries/

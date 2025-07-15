@@ -1,0 +1,9 @@
+framework module UnityFramework {
+    umbrella header "UnityFramework.h"
+    header "UnityAppController.h"
+    header "RenderPluginDelegate.h"
+    header "LifeCycleListener.h"
+    export *
+    module * { export * }
+    link "UnityFramework"
+}
