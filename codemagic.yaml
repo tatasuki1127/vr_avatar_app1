@@ -535,18 +535,42 @@ workflows:
           echo "🔧 Installing CocoaPods with Unity Framework integration..."
           pod install --repo-update --verbose
           
-          # Verify Unity Framework integration
+          # Verify Unity Framework integration (Enhanced)
+          echo "🔍 Searching for UnityFramework in all possible locations..."
+          
+          # Check standard pod location
           if [ -d "Pods/UnityFramework" ]; then
-            echo "✅ UnityFramework pod successfully integrated"
+            echo "✅ UnityFramework pod found in standard location"
             echo "📊 UnityFramework pod contents:"
             ls -la "Pods/UnityFramework/" || echo "No contents found"
           else
-            echo "⚠️ UnityFramework pod not found - checking flutter_unity_widget"
-            if [ -d "Pods/flutter_unity_widget" ]; then
-              echo "✅ flutter_unity_widget pod found"
-            else
-              echo "❌ Neither UnityFramework nor flutter_unity_widget pods found"
-            fi
+            echo "⚠️ UnityFramework pod not found in standard location"
+          fi
+          
+          # Check build products
+          if [ -d "build/Release-iphoneos/UnityFramework" ]; then
+            echo "✅ UnityFramework found in build products"
+            ls -la "build/Release-iphoneos/UnityFramework/"
+          fi
+          
+          # Check all pods for UnityFramework
+          echo "🔍 All installed pods:"
+          find Pods -name "*Unity*" -type d 2>/dev/null | while read unity_dir; do
+            echo "  Found Unity-related: $unity_dir"
+            ls -la "$unity_dir" | head -5
+          done
+          
+          # Check if UnityFramework is in the Pod manifest
+          if [ -f "Pods/Manifest.lock" ]; then
+            echo "🔍 Checking Pod manifest for UnityFramework:"
+            grep -A 3 -B 3 "UnityFramework" Pods/Manifest.lock || echo "UnityFramework not found in manifest"
+          fi
+          
+          # Check flutter_unity_widget
+          if [ -d "Pods/flutter_unity_widget" ]; then
+            echo "✅ flutter_unity_widget pod found"
+          else
+            echo "❌ flutter_unity_widget pod not found"
           fi
           
           # Verify Module Map accessibility
@@ -565,9 +589,70 @@ workflows:
           else
             echo "❌ Unity Framework binary missing!"
           fi
+          
+          # Fix Xcode project settings for UnityFramework module resolution
+          echo "🔧 Fixing Xcode project settings for UnityFramework module..."
+          
+          if [ -f "Runner.xcodeproj/project.pbxproj" ]; then
+            # Add SWIFT_INCLUDE_PATHS for UnityFramework
+            sed -i '' 's/SWIFT_VERSION = 5.0;/SWIFT_VERSION = 5.0;\
+				SWIFT_INCLUDE_PATHS = "$(inherited)" "$(SRCROOT)\/Frameworks\/UnityFramework.framework\/Headers";/' Runner.xcodeproj/project.pbxproj
+            
+            # Add HEADER_SEARCH_PATHS for UnityFramework
+            sed -i '' 's/HEADER_SEARCH_PATHS = (/HEADER_SEARCH_PATHS = (\
+				"$(inherited)",\
+				"$(SRCROOT)\/Frameworks\/UnityFramework.framework\/Headers",/' Runner.xcodeproj/project.pbxproj
+            
+            # Add FRAMEWORK_SEARCH_PATHS if not already present
+            if ! grep -q "FRAMEWORK_SEARCH_PATHS.*PROJECT_DIR.*Frameworks" Runner.xcodeproj/project.pbxproj; then
+              sed -i '' 's/FRAMEWORK_SEARCH_PATHS = (/FRAMEWORK_SEARCH_PATHS = (\
+				"$(inherited)",\
+				"$(PROJECT_DIR)\/Frameworks",\
+				"$(SRCROOT)\/Frameworks",/' Runner.xcodeproj/project.pbxproj
+            fi
+            
+            # Add LIBRARY_SEARCH_PATHS for static libraries
+            sed -i '' 's/LIBRARY_SEARCH_PATHS = (/LIBRARY_SEARCH_PATHS = (\
+				"$(inherited)",\
+				"$(PROJECT_DIR)\/Libraries",\
+				"$(SRCROOT)\/Libraries",/' Runner.xcodeproj/project.pbxproj
+            
+            echo "✅ Xcode project settings updated for UnityFramework module resolution"
+          else
+            echo "❌ Runner.xcodeproj/project.pbxproj not found"
+          fi
       
       - name: Build iOS app (No Code Signing)
         script: |
+          # Pre-build debugging
+          echo "🔍 Pre-build Unity Framework verification..."
+          cd ios
+          
+          # Check if UnityFramework exists and is accessible
+          if [ -d "Frameworks/UnityFramework.framework" ]; then
+            echo "✅ UnityFramework.framework directory exists"
+            echo "📊 Framework contents:"
+            ls -la Frameworks/UnityFramework.framework/
+            
+            # Test module map
+            if [ -f "Frameworks/UnityFramework.framework/Headers/module.modulemap" ]; then
+              echo "✅ Module map exists in Headers"
+              echo "📋 Module map content:"
+              cat Frameworks/UnityFramework.framework/Headers/module.modulemap
+            fi
+            
+            # Test binary
+            if [ -f "Frameworks/UnityFramework.framework/UnityFramework" ]; then
+              echo "✅ UnityFramework binary exists"
+              echo "📊 Binary size: $(du -sh Frameworks/UnityFramework.framework/UnityFramework | cut -f1)"
+              echo "🔍 Binary file type: $(file Frameworks/UnityFramework.framework/UnityFramework)"
+            fi
+          else
+            echo "❌ UnityFramework.framework directory missing!"
+          fi
+          
+          cd ..
+          
           # Unity as Library統合テスト用ビルド（署名なし）
           flutter build ios --release \
             --dart-define=GPU_OPTIMIZATION=true \
