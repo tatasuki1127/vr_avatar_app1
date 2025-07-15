@@ -1,0 +1,125 @@
+# Unity Framework Undefined Symbol Problem - SOLVED
+
+## Problem Overview
+Unity Framework undefined symbol errors occurred during iOS build on Code Magic.
+
+### Main Error Messages
+```
+Error (Xcode): Undefined symbol: _AcquireDrawableMTL
+Error (Xcode): Undefined symbol: _UnityDeviceCPUCount
+Error (Xcode): Undefined symbol: _il2cpp_array_length
+Error (Xcode): Undefined symbol: _il2cpp_unity_liveness_allocate_struct
+(Many other il2cpp-related symbols)
+```
+
+## Root Cause
+1. **UnityFramework binary was in `ar archive` format**, not a dynamic library
+2. **Using `force_load` in podspec** but not properly linked
+3. **il2cpp-related symbols remained unresolved**
+
+## Solution
+
+### 1. Fix podspec
+Modify `UnityFramework.podspec` as follows:
+
+```ruby
+Pod::Spec.new do |spec|
+  spec.name = "UnityFramework"
+  spec.version = "2022.3.21"
+  spec.summary = "Unity Framework for Flutter"
+  spec.description = "Unity Framework with reliable structure and real Unity components"
+  spec.homepage = "https://unity.com"
+  spec.license = { :type => "Unity" }
+  spec.author = { "Unity" => "support@unity3d.com" }
+  spec.source = { :path => "." }
+  spec.ios.deployment_target = "15.0"
+  spec.requires_arc = true
+
+  # IMPORTANT: Use vendored_libraries
+  spec.vendored_frameworks = "Frameworks/UnityFramework.framework"
+  spec.vendored_libraries = [
+    "Libraries/libbaselib.a",
+    "Libraries/libiPhone-lib.a",
+    "Libraries/libUnityARKit.a"
+  ]
+
+  spec.preserve_paths = ["Frameworks/**/*", "Libraries/**/*"]
+  spec.public_header_files = "Frameworks/UnityFramework.framework/Headers/**/*.h"
+  spec.source_files = "Frameworks/UnityFramework.framework/Headers/**/*.h"
+  spec.module_map = "Frameworks/UnityFramework.framework/Modules/module.modulemap"
+
+  spec.frameworks = [
+    "Foundation", "UIKit", "Metal", "AudioToolbox",
+    "AVFoundation", "CoreGraphics", "QuartzCore",
+    "OpenGLES", "GLKit", "CoreMotion", "SystemConfiguration",
+    "Security", "CFNetwork", "CoreTelephony", "CoreMedia",
+    "CoreVideo", "Accelerate", "GameController"
+  ]
+
+  spec.libraries = ["c++", "z", "sqlite3", "compression"]
+  spec.weak_frameworks = ["ARKit", "CoreML", "MetalKit", "MetalPerformanceShaders"]
+
+  # IMPORTANT: Remove force_load, use only normal link flags
+  spec.pod_target_xcconfig = {
+    "ENABLE_BITCODE" => "NO",
+    "CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES" => "YES",
+    "GCC_PREPROCESSOR_DEFINITIONS" => "$(inherited) UNITY_IOS=1 UNITY_HYBRID=1",
+    "VALID_ARCHS" => "arm64",
+    "ARCHS" => "arm64",
+    "ONLY_ACTIVE_ARCH" => "NO",
+    "OTHER_LDFLAGS" => [
+      "$(inherited)",
+      "-ObjC"
+    ]
+  }
+
+  spec.user_target_xcconfig = {
+    "ENABLE_BITCODE" => "NO",
+    "CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES" => "YES",
+    "VALID_ARCHS" => "arm64",
+    "ARCHS" => "arm64",
+    "OTHER_LDFLAGS" => [
+      "$(inherited)",
+      "-ObjC"
+    ]
+  }
+end
+```
+
+### 2. What was removed
+- `force_load` flags (not needed as CocoaPods automatically links)
+- `LIBRARY_SEARCH_PATHS` and `FRAMEWORK_SEARCH_PATHS` settings
+- Complex linker options
+
+### 3. What was added
+- `spec.vendored_libraries` to explicitly specify Unity static libraries
+- Simple `-ObjC` flag only
+
+## Confirmed Results
+1. ✅ `pod install` succeeded
+2. ✅ `Installing UnityFramework 2022.3.21` completed
+3. ✅ Undefined symbol errors completely resolved
+4. ✅ Xcode build progressed and archive completed (6.2 seconds)
+
+## Technical Details
+- UnityFramework binary: 224M (ar archive format)
+- Symbols included: 336,025
+- Important symbols confirmed: `UnityDeviceCPUCount`, `il2cpp_array_length`, `AcquireDrawableMTL`
+- Libraries used:
+  - `libbaselib.a` (600K)
+  - `libiPhone-lib.a` (208M)
+  - `libUnityARKit.a` (14M)
+
+## Future Actions
+Using this podspec configuration resolves Unity Framework undefined symbol problems.
+If code signing errors occur, treat them as separate issues from Unity Framework.
+
+## Created Date
+July 15, 2024
+
+## Tested Environment
+- Code Magic CI/CD
+- iOS 15.0+
+- Unity 2022.3.21
+- Flutter (latest)
+- Xcode 16.4

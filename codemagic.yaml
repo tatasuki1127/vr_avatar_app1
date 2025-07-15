@@ -71,18 +71,87 @@ workflows:
           echo "🎯 All Unity Framework headers validated successfully!"
           cd ..
       
-      - name: Unity Framework の自動展開
+      - name: Unity as Library自動展開
         script: |
-          # Unity Framework zip展開
+          # Unity as Library ZIP展開スクリプト
           cd ios
+          
+          # 1. UnityFramework.framework 展開
           if [ -f "UnityFramework.zip" ]; then
             echo "📦 Extracting UnityFramework.zip..."
-            unzip -o UnityFramework.zip
-            echo "✅ Unity Framework extracted successfully"
-            echo "Size: $(du -sh Frameworks/UnityFramework.framework)"
+            unzip -o UnityFramework.zip -d ./
+            echo "✅ UnityFramework.framework extracted successfully"
+            echo "Size: $(du -sh Frameworks/UnityFramework.framework 2>/dev/null || echo 'Framework not found')"
           else
-            echo "ℹ️  UnityFramework.zip not found - using Git tracked headers"
+            echo "❌ UnityFramework.zip not found!"
+            exit 1
           fi
+          
+          # 2. UnityLibraries 展開
+          if [ -f "UnityLibraries.zip" ]; then
+            echo "📦 Extracting UnityLibraries.zip..."
+            unzip -o UnityLibraries.zip -d ./
+            echo "✅ Unity Libraries extracted successfully"
+            
+            # Libraries 配置確認
+            if [ -d "Libraries" ]; then
+              echo "📂 Unity Libraries structure:"
+              ls -la Libraries/
+              echo "Total size: $(du -sh Libraries/)"
+            fi
+          else
+            echo "❌ UnityLibraries.zip not found!"
+            exit 1
+          fi
+          
+          # 3. Unity Framework 完全性チェック
+          FRAMEWORK_PATH="Frameworks/UnityFramework.framework"
+          if [ -d "$FRAMEWORK_PATH" ]; then
+            echo "🔍 Unity Framework validation..."
+            
+            # 実行バイナリ確認
+            if [ -f "$FRAMEWORK_PATH/UnityFramework" ]; then
+              echo "✅ UnityFramework binary exists"
+              file "$FRAMEWORK_PATH/UnityFramework"
+            else
+              echo "❌ UnityFramework binary missing!"
+              exit 1
+            fi
+            
+            # Info.plist 確認
+            if [ -f "$FRAMEWORK_PATH/Info.plist" ]; then
+              echo "✅ Info.plist exists"
+            else
+              echo "❌ Info.plist missing!"
+              exit 1
+            fi
+            
+            # Headers 確認
+            if [ -d "$FRAMEWORK_PATH/Headers" ]; then
+              echo "✅ Headers directory exists"
+              ls -la "$FRAMEWORK_PATH/Headers/"
+            else
+              echo "⚠️  Headers directory missing - creating..."
+              mkdir -p "$FRAMEWORK_PATH/Headers"
+            fi
+            
+            # Data 確認
+            if [ -d "$FRAMEWORK_PATH/Data" ]; then
+              echo "✅ Unity Data directory exists"
+              echo "Data size: $(du -sh "$FRAMEWORK_PATH/Data")"
+            else
+              echo "❌ Unity Data directory missing!"
+              exit 1
+            fi
+            
+          else
+            echo "❌ UnityFramework.framework not found after extraction!"
+            exit 1
+          fi
+          
+          echo "🎯 Unity as Library setup completed successfully!"
+          echo "📊 Final structure:"
+          ls -la Frameworks/
           cd ..
       
       - name: Build iOS app

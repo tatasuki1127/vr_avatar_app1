@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_unity_widget/flutter_unity_widget.dart';
 import 'unity_native_controller.dart';
 
 /// Unity as Library ネイティブ Widget
@@ -111,20 +112,31 @@ class _UnityNativeWidgetState extends State<UnityNativeWidget>
       );
     }
     
-    // Unity ネイティブビューを埋め込み
-    return UiKitView(
-      viewType: 'unity_native_view',
-      layoutDirection: TextDirection.ltr,
-      creationParams: <String, dynamic>{
-        'fullscreen': widget.fullscreen,
-        'metalEnabled': true,
-        'neuralEngineEnabled': true,
-        'targetFPS': 60,
+    // flutter_unity_widget を使用したUnity表示
+    return UnityWidget(
+      onUnityCreated: (UnityWidgetController controller) {
+        // UnityWidgetControllerをUnityNativeControllerに変換
+        final nativeController = UnityNativeController();
+        nativeController.setUnityController(controller);
+        widget.onUnityCreated?.call(nativeController);
       },
-      creationParamsCodec: const StandardMessageCodec(),
-      onPlatformViewCreated: (int id) {
-        debugPrint('✅ Unity native view created with ID: $id');
+      onUnityMessage: (message) {
+        widget.onUnityMessage?.call(message);
       },
+      onUnitySceneLoaded: (SceneLoaded scene) {
+        widget.onUnityLoaded?.call();
+      },
+      onUnityUnloaded: () {
+        debugPrint('🛑 Unity unloaded');
+      },
+      fullscreen: widget.fullscreen,
+      borderRadius: BorderRadius.zero,
+      enablePlaceholder: true,
+      placeholder: const Center(
+        child: CircularProgressIndicator(
+          color: Color(0xFFE94560),
+        ),
+      ),
     );
   }
 }

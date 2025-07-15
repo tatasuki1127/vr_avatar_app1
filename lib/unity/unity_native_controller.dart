@@ -1,11 +1,11 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_unity_widget/flutter_unity_widget.dart';
 
 /// Unity as Library ネイティブ制御クラス
-/// flutter_unity_widget の代替として Unity Framework を直接制御
+/// flutter_unity_widget を使用した Unity Framework 制御
 class UnityNativeController {
-  static const MethodChannel _channel = MethodChannel('unity_native_bridge');
-  static const EventChannel _eventChannel = EventChannel('unity_native_events');
+  UnityWidgetController? _unityController;
   
   // Unity 状態管理
   bool _isInitialized = false;
@@ -13,6 +13,13 @@ class UnityNativeController {
   void Function(String)? onUnityMessage;
   void Function()? onUnityLoaded;
   void Function(String)? onUnityError;
+  
+  // UnityWidgetControllerを設定
+  void setUnityController(UnityWidgetController controller) {
+    _unityController = controller;
+    _isInitialized = true;
+    _isUnityLoaded = true;
+  }
   
   // Unity Framework 初期化
   Future<bool> initializeUnity() async {
@@ -75,18 +82,13 @@ class UnityNativeController {
   
   // Unity にメッセージ送信
   Future<void> sendMessage(String gameObjectName, String methodName, String message) async {
-    if (!_isUnityLoaded) {
+    if (!_isUnityLoaded || _unityController == null) {
       debugPrint('⚠️ Unity not loaded, message ignored: $message');
       return;
     }
     
     try {
-      await _channel.invokeMethod('sendMessage', {
-        'gameObject': gameObjectName,
-        'method': methodName,
-        'message': message,
-      });
-      
+      await _unityController!.postMessage(gameObjectName, methodName, message);
       debugPrint('📤 Message sent to Unity: $gameObjectName.$methodName($message)');
     } catch (e) {
       debugPrint('❌ Failed to send message to Unity: $e');
@@ -122,7 +124,7 @@ class UnityNativeController {
   // Unity 一時停止
   Future<void> pauseUnity() async {
     try {
-      await _channel.invokeMethod('pauseUnity');
+      await _unityController?.pause();
       debugPrint('⏸️ Unity paused');
     } catch (e) {
       debugPrint('❌ Failed to pause Unity: $e');
@@ -132,7 +134,7 @@ class UnityNativeController {
   // Unity 再開
   Future<void> resumeUnity() async {
     try {
-      await _channel.invokeMethod('resumeUnity');
+      await _unityController?.resume();
       debugPrint('▶️ Unity resumed');
     } catch (e) {
       debugPrint('❌ Failed to resume Unity: $e');
@@ -142,7 +144,7 @@ class UnityNativeController {
   // Unity 終了
   Future<void> destroyUnity() async {
     try {
-      await _channel.invokeMethod('destroyUnity');
+      await _unityController?.unload();
       _isInitialized = false;
       _isUnityLoaded = false;
       debugPrint('🛑 Unity destroyed');
@@ -151,44 +153,11 @@ class UnityNativeController {
     }
   }
   
-  // Unity からのイベント監視
+  // Unity からのイベント監視（flutter_unity_widget経由）
   void _setupEventListener() {
-    _eventChannel.receiveBroadcastStream().listen(
-      (dynamic event) {
-        if (event is Map) {
-          final type = event['type'] as String?;
-          final data = event['data'] as String?;
-          
-          switch (type) {
-            case 'unity_loaded':
-              _isUnityLoaded = true;
-              onUnityLoaded?.call();
-              break;
-            case 'unity_message':
-              onUnityMessage?.call(data ?? '');
-              break;
-            case 'unity_error':
-              onUnityError?.call(data ?? 'Unknown Unity error');
-              break;
-            case 'photo_taken':
-              onUnityMessage?.call('PHOTO_TAKEN:${data ?? ''}');
-              break;
-            case 'character_changed':
-              onUnityMessage?.call('CHARACTER_CHANGED:${data ?? '0'}');
-              break;
-            case 'fps_update':
-              onUnityMessage?.call('FPS_UPDATE:${data ?? '60'}');
-              break;
-            default:
-              debugPrint('🔄 Unity event: $type -> $data');
-          }
-        }
-      },
-      onError: (dynamic error) {
-        debugPrint('❌ Unity event stream error: $error');
-        onUnityError?.call('Event stream error: $error');
-      },
-    );
+    // flutter_unity_widget のイベントハンドリングは
+    // UnityNativeWidget で設定されるため、ここでは不要
+    debugPrint('🔄 Unity event listener setup via flutter_unity_widget');
   }
   
   // Unity 状態確認
