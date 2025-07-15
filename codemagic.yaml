@@ -590,37 +590,8 @@ workflows:
             echo "❌ Unity Framework binary missing!"
           fi
           
-          # Fix Xcode project settings for UnityFramework module resolution
-          echo "🔧 Fixing Xcode project settings for UnityFramework module..."
-          
-          if [ -f "Runner.xcodeproj/project.pbxproj" ]; then
-            # Add SWIFT_INCLUDE_PATHS for UnityFramework
-            sed -i '' 's/SWIFT_VERSION = 5.0;/SWIFT_VERSION = 5.0;\
-                SWIFT_INCLUDE_PATHS = "$(inherited)" "$(SRCROOT)\/Frameworks\/UnityFramework.framework\/Headers";/' Runner.xcodeproj/project.pbxproj
-            
-            # Add HEADER_SEARCH_PATHS for UnityFramework
-            sed -i '' 's/HEADER_SEARCH_PATHS = (/HEADER_SEARCH_PATHS = (\
-                "$(inherited)",\
-                "$(SRCROOT)\/Frameworks\/UnityFramework.framework\/Headers",/' Runner.xcodeproj/project.pbxproj
-            
-            # Add FRAMEWORK_SEARCH_PATHS if not already present
-            if ! grep -q "FRAMEWORK_SEARCH_PATHS.*PROJECT_DIR.*Frameworks" Runner.xcodeproj/project.pbxproj; then
-              sed -i '' 's/FRAMEWORK_SEARCH_PATHS = (/FRAMEWORK_SEARCH_PATHS = (\
-                "$(inherited)",\
-                "$(PROJECT_DIR)\/Frameworks",\
-                "$(SRCROOT)\/Frameworks",/' Runner.xcodeproj/project.pbxproj
-            fi
-            
-            # Add LIBRARY_SEARCH_PATHS for static libraries
-            sed -i '' 's/LIBRARY_SEARCH_PATHS = (/LIBRARY_SEARCH_PATHS = (\
-                "$(inherited)",\
-                "$(PROJECT_DIR)\/Libraries",\
-                "$(SRCROOT)\/Libraries",/' Runner.xcodeproj/project.pbxproj
-            
-            echo "✅ Xcode project settings updated for UnityFramework module resolution"
-          else
-            echo "❌ Runner.xcodeproj/project.pbxproj not found"
-          fi
+          # Unity Framework integration is handled by CocoaPods
+          echo "✅ Unity Framework integration handled by CocoaPods - no manual Xcode project modification needed"
       
       - name: Build iOS app (No Code Signing)
         script: |
