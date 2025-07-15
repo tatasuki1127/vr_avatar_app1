@@ -28,12 +28,48 @@ workflows:
       
       - name: Get Flutter packages
         script: |
+          echo "📦 Installing Flutter dependencies..."
+          flutter clean
           flutter packages pub get
-      
+          flutter precache --ios
+          
+          # flutter_unity_widget 依存関係確認
+          echo "🔍 Checking flutter_unity_widget..."
+          flutter packages pub deps | grep flutter_unity_widget || echo "⚠️ flutter_unity_widget not found"
+          
+      - name: Verify Flutter iOS setup
+        script: |
+          echo "🔍 Verifying Flutter iOS configuration..."
+          
+          # Generated.xcconfig確認
+          if [ -f "ios/Flutter/Generated.xcconfig" ]; then
+            echo "✅ Generated.xcconfig exists"
+            cat ios/Flutter/Generated.xcconfig
+          else
+            echo "❌ Generated.xcconfig missing - regenerating..."
+            flutter build ios --config-only
+          fi
+          
+          # flutter_export_environment.sh確認
+          if [ -f "ios/Flutter/flutter_export_environment.sh" ]; then
+            echo "✅ flutter_export_environment.sh exists"
+          else
+            echo "❌ flutter_export_environment.sh missing"
+            exit 1
+          fi
+          
       - name: Install CocoaPods dependencies
         script: |
+          echo "🍎 Installing CocoaPods dependencies..."
           cd ios
-          pod install --repo-update
+          
+          # CocoaPods キャッシュクリア
+          pod cache clean --all || true
+          rm -rf Pods/ || true
+          rm -rf ~/Library/Caches/CocoaPods || true
+          
+          # CocoaPods install
+          pod install --repo-update --verbose
       
       - name: Unity Framework Headers Validation
         script: |
