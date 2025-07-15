@@ -37,7 +37,7 @@ target 'Runner' do
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
   
   # Unity Static Libraries Integration via CocoaPods
-  # pod 'UnityFramework', :path => './'
+  # Unity Framework の手動統合は post_install で実行
   
   target 'RunnerTests' do
     inherit! :search_paths
@@ -60,6 +60,14 @@ post_install do |installer|
       
       # ARM64 最適化（Neural Engine対応）
       config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64' if config.name == 'Debug'
+      
+      # Unity Framework 統合設定
+      if target.name == 'Runner'
+        config.build_settings['FRAMEWORK_SEARCH_PATHS'] ||= []
+        config.build_settings['FRAMEWORK_SEARCH_PATHS'] << '$(PROJECT_DIR)/Frameworks'
+        config.build_settings['OTHER_LDFLAGS'] ||= []
+        config.build_settings['OTHER_LDFLAGS'] << '-framework UnityFramework'
+      end
       
       # Swift最適化
       if target.respond_to?(:product_type) && target.product_type == "com.apple.product-type.bundle"
