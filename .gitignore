@@ -47,12 +47,14 @@ app.*.map.json
 # Unity Framework (235MB) - zip圧縮で管理
 ios/Frameworks/UnityFramework.framework/Data/
 ios/Frameworks/UnityFramework.framework/UnityFramework
-ios/Frameworks/UnityFramework.framework/*.plist
-ios/Frameworks/UnityFramework.framework/*.txt
-ios/Frameworks/UnityFramework.framework/*.xcprivacy
 # Headers と Modules は追跡する（必須）
 !ios/Frameworks/UnityFramework.framework/Headers/
 !ios/Frameworks/UnityFramework.framework/Modules/
+# App Store審査必須ファイルは追跡する
+!ios/Frameworks/UnityFramework.framework/PrivacyInfo.xcprivacy
+!ios/Frameworks/UnityFramework.framework/ApplePrivacyManifestsMerge.txt
+!ios/Frameworks/UnityFramework.framework/AppleRequiredReasonCSharpAPIs.txt
+!ios/Frameworks/UnityFramework.framework/Info.plist.unity.original
 # UnityFramework.zip と podspec は Git に含める
 !ios/UnityFramework.zip
 !ios/UnityFramework.podspec

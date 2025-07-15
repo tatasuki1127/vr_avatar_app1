@@ -3,6 +3,10 @@ framework module UnityFramework {
     header "UnityAppController.h"
     header "RenderPluginDelegate.h"
     header "LifeCycleListener.h"
+    header "AppDelegateListener.h"
+    header "UnityViewControllerListener.h"
+    header "iPhone_Sensors.h"
+    header "Preprocessor.h"
     export *
     link "c++"
     link "z"

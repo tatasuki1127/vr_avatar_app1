@@ -165,12 +165,20 @@ workflows:
           #endif
           EOF
           
-          # Module map (両方の場所に配置)
+          # Module map (両方の場所に配置) - 修正版with追加ヘッダー
           cat > "Frameworks/UnityFramework.framework/Modules/module.modulemap" << 'EOF'
           framework module UnityFramework {
               umbrella header "UnityFramework.h"
+              header "UnityAppController.h"
+              header "RenderPluginDelegate.h"
+              header "LifeCycleListener.h"
+              header "AppDelegateListener.h"
+              header "UnityViewControllerListener.h"
+              header "iPhone_Sensors.h"
+              header "Preprocessor.h"
               export *
-              module * { export * }
+              link "c++"
+              link "z"
               link "UnityFramework"
           }
           EOF
