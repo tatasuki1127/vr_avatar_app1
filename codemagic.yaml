@@ -593,25 +593,8 @@ workflows:
           # Unity Framework integration is handled by CocoaPods
           echo "✅ Unity Framework integration handled by CocoaPods - no manual Xcode project modification needed"
           
-          # Swift Module 認識のための追加設定（より安全なsed方式）
-          echo "🔧 Configuring Swift module recognition for UnityFramework..."
-          
-          if [ -f "Runner.xcodeproj/project.pbxproj" ]; then
-            # SWIFT_INCLUDE_PATHS を安全に追加
-            echo "Adding Swift import search paths..."
-            
-            # 既にSWIFT_INCLUDE_PATHSが存在するかチェック
-            if ! grep -q "SWIFT_INCLUDE_PATHS" "Runner.xcodeproj/project.pbxproj"; then
-              # SWIFT_VERSION の行の後に SWIFT_INCLUDE_PATHS を追加
-              sed -i.bak 's/SWIFT_VERSION = 5\.0;/SWIFT_VERSION = 5.0;\
-				SWIFT_INCLUDE_PATHS = "$(inherited)" "$(SRCROOT)\/Frameworks\/UnityFramework.framework\/Headers";/' Runner.xcodeproj/project.pbxproj
-              echo "✅ Swift module search paths configured"
-            else
-              echo "✅ Swift module search paths already configured"
-            fi
-          else
-            echo "❌ Runner.xcodeproj/project.pbxproj not found"
-          fi
+          # Unity Framework integration relies on CocoaPods and proper module.modulemap
+          echo "✅ Swift module recognition handled by updated module.modulemap and CocoaPods integration"
       
       - name: Build iOS app (No Code Signing)
         script: |
