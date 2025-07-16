@@ -1,0 +1,20 @@
+#include "Generated.xcconfig"
+#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"
+
+// GPU最適化・Metal API設定（プロファイル）
+ENABLE_BITCODE = NO
+METAL_ENABLE_DEBUG_INFO = NO
+MTL_ENABLE_DEBUG_INFO = NO
+
+// iOS最適化設定
+IPHONEOS_DEPLOYMENT_TARGET = 15.0
+TARGETED_DEVICE_FAMILY = 1
+SUPPORTED_PLATFORMS = iphoneos
+
+// Unity Framework via CocoaPods (自動設定)
+ENABLE_BITCODE = NO
+
+// CodeMagic署名用設定（開発時は無効）
+// CODE_SIGN_STYLE = Manual
+// DEVELOPMENT_TEAM = 
+// PROVISIONING_PROFILE_SPECIFIER = 
